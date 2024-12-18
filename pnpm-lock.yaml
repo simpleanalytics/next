@@ -15,7 +15,7 @@ importers:
   packages/analytics:
     dependencies:
       next:
-        specifier: '>= 13'
+        specifier: '>= 14'
         version: 15.1.0(react-dom@19.0.0(react@19.0.0))(react@19.0.0)
       react:
         specifier: ^18 || ^19
