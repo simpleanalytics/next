@@ -22,5 +22,8 @@
   "peerDependencies": {
     "next": ">= 14",
     "react": "^18 || ^19"
+  },
+  "dependencies": {
+    "server-only": "^0.0.1"
   }
 }
