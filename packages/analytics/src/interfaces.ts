@@ -2,7 +2,7 @@ export interface AnalyticsEvent {
   type: "event";
   hostname: string;
   event: string;
-  metadata: Record<string, string | boolean | number | Date>;
+  metadata?: Record<string, string | boolean | number | Date> | undefined;
   ua: string;
 
   viewport_width?: number | undefined;
