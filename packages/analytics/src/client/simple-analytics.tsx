@@ -2,11 +2,17 @@ import React, { Suspense } from "react";
 import Script from "next/script";
 import type { AnalyticsSettings } from "../interfaces";
 
-function parseDataProps(settings: AnalyticsSettings) {
-  const metrics = Object.entries(settings.ignoreMetrics)
-  .filter(([_, value]) => value)
-  .map(([key]) => `${key}`)
-  .join(",");
+function parseDataProps(settings?: AnalyticsSettings) {
+  if (!settings) {
+    return {};
+  }
+
+  const metrics = settings.ignoreMetrics
+    ? Object.entries(settings.ignoreMetrics)
+        .filter(([_, value]) => value)
+        .map(([key]) => `${key}`)
+        .join(",")
+    : undefined;
 
   return {
     "data-collect-dnt": settings.collectDnt,
@@ -21,7 +27,7 @@ function parseDataProps(settings: AnalyticsSettings) {
 }
 
 interface SimpleAnalyticsProps {
-  settings: AnalyticsSettings;
+  settings?: AnalyticsSettings;
 }
 
 export const SimpleAnalytics = (props: SimpleAnalyticsProps) => {
