@@ -6,6 +6,7 @@ export default defineConfig((options) => ({
   splitting: false,
   treeshake: true,
   sourcemap: true,
+  dts: true,
   clean: true,
   outDir: "dist", // Where you want your compiled files to live
   onSuccess: async () => {
