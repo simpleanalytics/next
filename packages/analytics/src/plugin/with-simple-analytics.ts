@@ -1,17 +1,17 @@
 import type { NextConfig } from "next";
 
 interface WithSimpleAnalyticsOptions {
-  domain?: string;
+  domain: string;
   nextConfig?: NextConfig;
 }
 
-export function withSimpleAnalytics(options: WithSimpleAnalyticsOptions = {}) {
+export function withSimpleAnalytics(options: WithSimpleAnalyticsOptions) {
   const nextAnalyticsConfig: NextConfig = {
     async rewrites() {
       return [
         {
           source: "/proxy.js",
-          destination: "https://simpleanalyticsexternal.com/proxy.js?hostname=example.com&path=/simple",
+          destination: `https://simpleanalyticsexternal.com/proxy.js?hostname=${options.domain}&path=/simple`,
         },
         {
           source: "/auto-events.js",
