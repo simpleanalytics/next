@@ -33,7 +33,7 @@ export interface AnalyticsSettings {
   collectDnt?: boolean | undefined;
   hostname?: string | undefined;
   mode?: "dash" | undefined;
-  ignoreMetrics: {
+  ignoreMetrics?: {
     referrer?: boolean | undefined;
     utm?: boolean | undefined;
     country?: boolean | undefined;
@@ -44,7 +44,7 @@ export interface AnalyticsSettings {
     screensize?: boolean | undefined;
     viewportsize?: boolean | undefined;
     language?: boolean | undefined;
-  };
+  } | undefined;
   ignorePages?: string[] | undefined;
   allowParams?: string[] | undefined;
   nonUniqueParams?: string[] | undefined;
