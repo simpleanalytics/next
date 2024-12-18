@@ -6,14 +6,14 @@ import { trackEvent } from "./track-event";
 import { trackPageview } from "./track-pageview";
 
 interface SimpleAnalyticsClientOptions {
-  hostname: string
+  hostname: string;
 }
 
-const SIMPLE_ANALYTICS_EVENTS_URL = "https://queue.simpleanalyticscdn.com/events";
+const SIMPLE_ANALYTICS_EVENTS_URL =
+  "https://queue.simpleanalyticscdn.com/events";
 
 class SimpleAnalyticsClient {
-  constructor(private readonly options: SimpleAnalyticsClientOptions) {
-  }
+  constructor(private readonly options: SimpleAnalyticsClientOptions) {}
 
   async trackEvent(eventName: string, params?: AnalyticsEventMetadata) {
     const ua = (await headers()).get("user-agent") || "";
@@ -23,7 +23,7 @@ class SimpleAnalyticsClient {
       hostname: this.options.hostname,
       event: eventName,
       metadata: params,
-      ua
+      ua,
     });
   }
 
@@ -37,7 +37,7 @@ class SimpleAnalyticsClient {
       hostname: this.options.hostname,
       path,
       ref: referrer,
-      ua
+      ua,
     });
   }
 }

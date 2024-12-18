@@ -37,10 +37,7 @@ export const SimpleAnalytics = (props: SimpleAnalyticsProps) => {
 
   return (
     <Suspense fallback={null}>
-      <Script
-        {...dataProps}
-        src="/proxy.js"
-      />
+      <Script {...dataProps} src="/proxy.js" />
     </Suspense>
   );
 };

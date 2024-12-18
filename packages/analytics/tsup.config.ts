@@ -1,10 +1,15 @@
 import { defineConfig } from "tsup";
 import { exec } from "node:child_process";
-import { preserveDirectivesPlugin } from 'esbuild-plugin-preserve-directives';
+import { preserveDirectivesPlugin } from "esbuild-plugin-preserve-directives";
 
-export default defineConfig((options) => ([
+export default defineConfig((options) => [
   {
-    entry: ["src/index.ts", "src/client/index.tsx", "src/server/index.ts", "src/plugin/index.ts"],
+    entry: [
+      "src/index.ts",
+      "src/client/index.tsx",
+      "src/server/index.ts",
+      "src/plugin/index.ts",
+    ],
     splitting: false,
     treeshake: true,
     sourcemap: true,
@@ -17,11 +22,11 @@ export default defineConfig((options) => ([
     metafile: true,
     esbuildPlugins: [
       preserveDirectivesPlugin({
-        directives: ['use client', 'use strict'],
+        directives: ["use client", "use strict"],
         include: /\.(js|ts|jsx|tsx)$/,
         exclude: /node_modules/,
       }),
     ],
     ...options,
-  }
-]));
+  },
+]);

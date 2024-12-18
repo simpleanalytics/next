@@ -25,5 +25,5 @@ export function withSimpleAnalytics(options: WithSimpleAnalyticsOptions) {
     },
   };
 
-  return {...options.nextConfig, ...nextAnalyticsConfig};
+  return { ...options.nextConfig, ...nextAnalyticsConfig };
 }

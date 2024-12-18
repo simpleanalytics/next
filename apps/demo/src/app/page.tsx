@@ -15,7 +15,9 @@ export default function Home() {
           setCount((count) => count + 1);
           trackEvent("clicked", { count });
         }}
-      >increment</button>
+      >
+        increment
+      </button>
     </div>
   );
 }
