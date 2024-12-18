@@ -9,7 +9,7 @@ interface UseSimpleAnalyticsResult {
 }
 
 export const useSimpleAnalytics = (
-  props: UseSimpleAnalyticsProps,
+  props?: UseSimpleAnalyticsProps,
 ): UseSimpleAnalyticsResult => {
   const trackEvent = useCallback(
     (eventName: string, params?: AnalyticsEventMetadata) => {
