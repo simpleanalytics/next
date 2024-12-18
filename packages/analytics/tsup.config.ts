@@ -2,7 +2,7 @@ import { defineConfig } from "tsup";
 import { exec } from "node:child_process";
 
 export default defineConfig((options) => ({
-  entry: ["src/index.ts"],
+  entry: ["src/index.ts", "src/client/index.ts"],
   splitting: false,
   treeshake: true,
   sourcemap: true,
