@@ -14,6 +14,9 @@ importers:
 
   apps/demo:
     dependencies:
+      '@simpleanalytics/next':
+        specifier: workspace:*
+        version: link:../../packages/analytics
       next:
         specifier: 15.1.1
         version: 15.1.1(react-dom@19.0.0(react@19.0.0))(react@19.0.0)

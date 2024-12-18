@@ -1,7 +1,7 @@
 import type { NextConfig } from "next";
 
-const nextConfig: NextConfig = {
-  /* config options here */
-};
+import withSimpleAnalytics from "@simpleanalytics/next/plugin";
+
+const nextConfig: NextConfig = withSimpleAnalytics();
 
 export default nextConfig;
