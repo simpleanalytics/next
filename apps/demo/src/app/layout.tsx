@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
+import { SimpleAnalytics } from "@simpleanalytics/next/client";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -28,6 +29,7 @@ export default function RootLayout({
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
         {children}
+        <SimpleAnalytics settings={{ hostname: "simpleanalytics-next.vercel.app" }}/>
       </body>
     </html>
   );
