@@ -37,7 +37,7 @@ export const SimpleAnalytics = (props: SimpleAnalyticsProps) => {
     <Suspense fallback={null}>
       <Script
         {...dataProps}
-        src="https://scripts.simpleanalyticscdn.com/latest.js"
+        src="/proxy.js"
       />
     </Suspense>
   );
