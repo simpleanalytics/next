@@ -1,0 +1,38 @@
+import React, { Suspense } from "react";
+import Script from "next/script";
+import type { AnalyticsSettings } from "../interfaces";
+
+function parseDataProps(settings: AnalyticsSettings) {
+  const metrics = Object.entries(settings.ignoreMetrics)
+  .filter(([_, value]) => value)
+  .map(([key]) => `${key}`)
+  .join(",");
+
+  return {
+    "data-collect-dnt": settings.collectDnt,
+    "data-hostname": settings.hostname,
+    "data-mode": settings.mode,
+    "data-ignore-metrics": metrics === "" ? undefined : metrics,
+    "data-ignore-pages": settings.ignorePages?.join(","),
+    "data-allow-params": settings.allowParams?.join(","),
+    "data-non-unique-params": settings.nonUniqueParams?.join(","),
+    "data-strict-utm": settings.strictUtm,
+  };
+}
+
+interface SimpleAnalyticsProps {
+  settings: AnalyticsSettings;
+}
+
+export const SimpleAnalytics = (props: SimpleAnalyticsProps) => {
+  const dataProps = parseDataProps(props.settings);
+
+  return (
+    <Suspense fallback={null}>
+      <Script
+        {...dataProps}
+        src="https://scripts.simpleanalyticscdn.com/latest.js"
+      />
+    </Suspense>
+  );
+};
