@@ -6,9 +6,7 @@ export default defineConfig((options) => [
   {
     entry: [
       "src/index.ts",
-      "src/client/index.tsx",
       "src/server/index.ts",
-      "src/plugin/index.ts",
     ],
     splitting: false,
     treeshake: true,

@@ -1,6 +1,6 @@
 "use client";
 
-import { useSimpleAnalytics } from "@simpleanalytics/next/client";
+import { useSimpleAnalytics } from "@simpleanalytics/next";
 import { useState } from "react";
 
 export default function Home() {
