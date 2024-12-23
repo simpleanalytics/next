@@ -1,16 +1,12 @@
 import { useCallback } from "react";
 import type { AnalyticsEventMetadata } from "../interfaces";
 
-interface UseSimpleAnalyticsProps {}
-
 interface UseSimpleAnalyticsResult {
   trackEvent: (eventName: string, params?: AnalyticsEventMetadata) => void;
   trackPageview: (path: string) => void;
 }
 
-export const useSimpleAnalytics = (
-  props?: UseSimpleAnalyticsProps,
-): UseSimpleAnalyticsResult => {
+export const useSimpleAnalytics = (): UseSimpleAnalyticsResult => {
   const trackEvent = useCallback(
     (eventName: string, params?: AnalyticsEventMetadata) => {
       // Disable tracking on during SSR
