@@ -9,9 +9,6 @@ interface SimpleAnalyticsClientOptions {
   hostname: string;
 }
 
-const SIMPLE_ANALYTICS_EVENTS_URL =
-  "https://queue.simpleanalyticscdn.com/events";
-
 class SimpleAnalyticsClient {
   constructor(private readonly options: SimpleAnalyticsClientOptions) {}
 
