@@ -12,7 +12,7 @@ importers:
         specifier: latest
         version: 2.3.3
 
-  apps/demo:
+  apps/nextjs:
     dependencies:
       '@simpleanalytics/next':
         specifier: workspace:*
