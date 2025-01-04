@@ -23,6 +23,28 @@ export function withSimpleAnalytics(options: WithSimpleAnalyticsOptions) {
         },
       ];
     },
+    async headers() {
+      return [
+        {
+          source: "/",
+          headers: [
+            {
+              key: "Accept-CH",
+              value: "Viewport-Width, Viewport-Height, Lang",
+            },
+          ],
+        },
+        {
+          source: "/([^_].*)",
+          headers: [
+            {
+              key: "Accept-CH",
+              value: "Viewport-Width, Viewport-Height, Lang",
+            },
+          ],
+        },
+      ]
+    },
   };
 
   return { ...options.nextConfig, ...nextAnalyticsConfig };
