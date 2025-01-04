@@ -6,7 +6,9 @@ import type { AnalyticsSettings } from "../interfaces";
 
 function parseDataProps(settings?: AnalyticsSettings) {
   if (!settings) {
-    return {};
+    return {
+      "data-hostname": process.env.NEXT_PUBLIC_SIMPLE_ANALYTICS_HOSTNAME,
+    };
   }
 
   const metrics = settings.ignoreMetrics
@@ -18,7 +20,7 @@ function parseDataProps(settings?: AnalyticsSettings) {
 
   return {
     "data-collect-dnt": settings.collectDnt,
-    "data-hostname": settings.hostname,
+    "data-hostname": settings.hostname ?? process.env.NEXT_PUBLIC_SIMPLE_ANALYTICS_HOSTNAME,
     "data-mode": settings.mode,
     "data-ignore-metrics": metrics === "" ? undefined : metrics,
     "data-ignore-pages": settings.ignorePages?.join(","),
