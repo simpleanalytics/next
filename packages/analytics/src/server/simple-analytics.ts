@@ -1,44 +1,88 @@
 import "server-only";
 
-import { headers } from "next/headers";
-import { AnalyticsEventMetadata } from "../interfaces";
-import { trackEvent } from "./track-event";
-import { trackPageview } from "./track-pageview";
+import type { AnalyticsEvent, AnalyticsPageview } from "./interfaces";
+import type { AnalyticsMetadata } from "../interfaces";
 
-interface SimpleAnalyticsClientOptions {
-  hostname: string;
-}
+type ServerContext = { request: Request } | { headers: Headers };
 
-class SimpleAnalyticsClient {
-  constructor(private readonly options: SimpleAnalyticsClientOptions) {}
+type TrackEventOptions = {
+  metadata?: AnalyticsMetadata;
+  hostname?: string | undefined;
+} & ServerContext;
 
-  async trackEvent(eventName: string, params?: AnalyticsEventMetadata) {
-    const ua = (await headers()).get("user-agent") || "";
+export async function trackEvent(eventName: string, options: TrackEventOptions) {
+  const headers = "request" in options ? options.request.headers : options.headers;
 
-    return trackEvent({
-      type: "event",
-      hostname: this.options.hostname,
-      event: eventName,
-      metadata: params,
-      ua,
-    });
+  const hostname = options.hostname ?? process.env.SIMPLE_ANALYTICS_HOSTNAME;
+
+  if (!hostname) {
+    console.error("No hostname provided for Simple Analytics");
+    return;
   }
 
-  async trackPageview(path: string) {
-    const headerList = await headers();
-    const ua = headerList.get("user-agent") || "";
-    const referrer = headerList.get("referrer") || "";
+  const payload: AnalyticsEvent = {
+    type: "event",
+    hostname,
+    event: eventName,
+    metadata: options.metadata,
+    ua: headers.get("user-agent") ?? `ServerSide/1.0 (+${hostname})`,
+  };
 
-    return trackPageview({
-      type: "pageview",
-      hostname: this.options.hostname,
-      path,
-      ref: referrer,
-      ua,
-    });
+  const response = await fetch("https://queue.simpleanalyticscdn.com/events", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify(payload),
+  });
+
+  if (!response.ok) {
+    try {
+      console.error(`Failed to track event: ${response.status}`, await response.json());
+    }
+    catch (error) {
+      console.error(`Failed to track event: ${response.status}`);
+    }
   }
 }
 
-export function simpleAnalytics(options: SimpleAnalyticsClientOptions) {
-  return new SimpleAnalyticsClient(options);
+type TrackPageviewOptions = {
+  metadata?: AnalyticsMetadata;
+  hostname?: string | undefined;
+} & ServerContext;
+
+export async function trackPageview(path: string, options: TrackPageviewOptions) {
+  const headers = "request" in options ? options.request.headers : options.headers;
+
+  const hostname = options.hostname ?? process.env.SIMPLE_ANALYTICS_HOSTNAME;
+
+  if (!hostname) {
+    console.error("No hostname provided for Simple Analytics");
+    return;
+  }
+
+  const payload: AnalyticsPageview = {
+    type: "pageview",
+    hostname,
+    event: "pageview",
+    path,
+    ua: headers.get("user-agent") ?? `ServerSide/1.0 (+${hostname})`,
+  }
+
+  const response = await fetch("https://queue.simpleanalyticscdn.com/events", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify(payload),
+  });
+
+  if (!response.ok) {
+    try {
+      console.error(`Failed to track pageview: ${response.status}`, await response.json());
+    }
+    catch (error) {
+      console.error(`Failed to track pageview: ${response.status}`);
+    }
+  }
 }

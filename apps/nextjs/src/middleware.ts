@@ -1,15 +1,11 @@
 import { NextResponse } from "next/server";
 import type { NextFetchEvent, NextRequest } from "next/server";
-import { simpleAnalytics } from "@simpleanalytics/next/server";
+import { trackEvent } from "@simpleanalytics/next/server";
 
-const client = simpleAnalytics({
-  hostname: "simpleanalytics-next.vercel.app",
-});
-
-export function middleware(req: NextRequest, event: NextFetchEvent) {
+export function middleware(request: NextRequest, event: NextFetchEvent) {
   event.waitUntil(
-    client.trackEvent("hello from middleware", {
-      path: req.nextUrl.pathname,
+    trackEvent("hello from middleware", {
+      request,
     }),
   );
 

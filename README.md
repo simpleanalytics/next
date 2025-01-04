@@ -5,7 +5,7 @@
 To install the package, run:
 
 ```bash
-npm install @simpleanalytics/next
+TODO
 ```
 
 ## Usage
@@ -78,28 +78,23 @@ export default function Page() {
 }
 ```
 
-### Tracking events and pageviews using the server-side client
+### Tracking events and pageviews in Server Components, Route Handlers and Edge Middleware
 
-The server-side client, `simpleAnalytics`, allows tracking events and pageviews in Server Components, Route Handlers and the Edge Middleware. It provides methods `trackEvent` and `trackPageview` to track events and pageviews:
+The server-side functions `trackEvent` and `trackPageview` can be used to track events and pageviews:
 
 ```typescript
 import { NextResponse } from "next/server";
 import type { NextFetchEvent, NextRequest } from "next/server";
-import { simpleAnalytics } from "@simpleanalytics/next/server";
+import { trackEvent } from "@simpleanalytics/next/server";
 
-const client = simpleAnalytics({
-  hostname: "simpleanalytics-next.vercel.app",
-});
-
-export function middleware(req: NextRequest, event: NextFetchEvent) {
+export function middleware(request: NextRequest, event: NextFetchEvent) {
   // Perform the call in the background (see: https://nextjs.org/docs/app/building-your-application/routing/middleware#waituntil-and-nextfetchevent)
   event.waitUntil(
-    client.trackEvent("hello from the middleware", {
-      path: req.nextUrl.pathname,
+    trackEvent("hello from the middleware", {
+      request,
     }),
   );
 
   return NextResponse.next();
 }
 ```
-

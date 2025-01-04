@@ -1,1 +1,1 @@
-export { simpleAnalytics } from "./simple-analytics";
+export { trackEvent, trackPageview } from "./simple-analytics";
