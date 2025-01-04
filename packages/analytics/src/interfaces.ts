@@ -19,7 +19,7 @@ export interface AnalyticsEvent {
   content?: string | undefined;
 }
 
-export type AnalyticsEventMetadata = AnalyticsEvent["metadata"];
+export type AnalyticsMetadata = Record<string, string | boolean | number | Date> | undefined;
 
 export interface AnalyticsPageview {
   type: "pageview";
