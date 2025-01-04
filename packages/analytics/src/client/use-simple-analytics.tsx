@@ -2,7 +2,7 @@ import { useCallback } from "react";
 import type { AnalyticsMetadata } from "../interfaces";
 
 interface UseSimpleAnalyticsResult {
-  trackEvent: (eventName: string, params?: AnalyticsEventMetadata) => void;
+  trackEvent: (eventName: string, params?: AnalyticsMetadata) => void;
   trackPageview: (path: string) => void;
 }
 
