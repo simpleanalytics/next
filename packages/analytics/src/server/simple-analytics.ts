@@ -1,13 +1,15 @@
 import "server-only";
 
+import { NextRequest } from "next/server";
 import type { AnalyticsEvent, AnalyticsPageview } from "./interfaces";
 import type { AnalyticsMetadata } from "../interfaces";
 
 type ServerContext = { request: Request } | { headers: Headers };
 
 type TrackEventOptions = {
-  metadata?: AnalyticsMetadata;
+  path?: string | undefined;
   hostname?: string | undefined;
+  metadata?: AnalyticsMetadata;
 } & ServerContext;
 
 export async function trackEvent(eventName: string, options: TrackEventOptions) {
@@ -46,12 +48,23 @@ export async function trackEvent(eventName: string, options: TrackEventOptions) 
   }
 }
 
-type TrackPageviewOptions = {
-  metadata?: AnalyticsMetadata;
-  hostname?: string | undefined;
-} & ServerContext;
+type ServerContextWithPath = { request: Request } | { path: string, headers: Headers };
 
-export async function trackPageview(path: string, options: TrackPageviewOptions) {
+type TrackPageviewOptions = {
+  hostname?: string | undefined;
+  metadata?: AnalyticsMetadata;
+} & ServerContextWithPath;
+
+function getPath(request: Request) {
+  // When request is an NextRequest, the URL will already be parsed (see Next.js implementation)
+  if (request instanceof NextRequest) {
+    return request.nextUrl.pathname;
+  }
+
+  return (new URL(request.url)).pathname;
+}
+
+export async function trackPageview(options: TrackPageviewOptions) {
   const headers = "request" in options ? options.request.headers : options.headers;
 
   const hostname = options.hostname ?? process.env.SIMPLE_ANALYTICS_HOSTNAME;
@@ -60,6 +73,8 @@ export async function trackPageview(path: string, options: TrackPageviewOptions)
     console.error("No hostname provided for Simple Analytics");
     return;
   }
+
+  const path = "request" in options ? getPath(options.request) : options.path;
 
   const payload: AnalyticsPageview = {
     type: "pageview",
