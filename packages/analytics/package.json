@@ -29,7 +29,7 @@
     "tsup": "^8.3.5"
   },
   "peerDependencies": {
-    "next": ">= 14",
+    "next": ">= 13",
     "react": "^18 || ^19"
   },
   "dependencies": {
