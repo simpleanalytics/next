@@ -30,7 +30,7 @@ export default nextConfig;
 
 The client-side analytics component, `SimpleAnalytics`, imports the Simple Analytics tracking script:
 
-```typescript
+```tsx
 import { SimpleAnalytics } from "@simpleanalytics/next/client";
 
 export default function RootLayout({
@@ -55,7 +55,7 @@ export default function RootLayout({
 
 The React hook, `useSimpleAnalytics`, provides methods `trackEvent` and `trackPageview` for programmatically tracking events or pageviews in client components. Requires the `<SimpleAnalytics />` component to be present on the page or layout.
 
-```typescript
+```tsx
 "use client";
 
 import { useSimpleAnalytics } from "@simpleanalytics/next/client";
