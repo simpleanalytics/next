@@ -1,13 +1,9 @@
-import { NextResponse } from "next/server";
-import type { NextFetchEvent, NextRequest } from "next/server";
-import { trackEvent } from "@simpleanalytics/next/server";
+import { type NextRequest, type NextFetchEvent, NextResponse } from "next/server";
+import { trackPageview } from "@simpleanalytics/next/server";
 
 export function middleware(request: NextRequest, event: NextFetchEvent) {
-  event.waitUntil(
-    trackEvent("hello from middleware", {
-      request,
-    }),
-  );
+  // Perform the pageview tracking call to Simple Analytics in the background
+  event.waitUntil(trackPageview({ request }));
 
   return NextResponse.next();
 }
