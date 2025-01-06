@@ -108,3 +108,27 @@ export async function middleware(request: NextRequest) {
   return NextResponse.next();
 }
 ```
+
+### Tracking events in a server action
+
+#### Next.js 14 and later
+```typescript
+"use server";
+
+import { after } from "next/server";
+import { headers } from "next/headers";
+import { trackEvent } from "@simpleanalytics/next/server";
+
+export async function exampleAction() {
+  // Add your logic here...
+
+  after(async () => {
+    await trackEvent("event_in_example_action", {
+      // When running on Vercel passing the headers is not necessary.
+      headers: await headers(),
+    });
+  });
+
+  return { success: true };
+}
+```
