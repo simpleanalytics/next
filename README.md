@@ -20,7 +20,9 @@ import withSimpleAnalytics from "@simpleanalytics/next/plugin";
 
 const nextConfig: NextConfig = withSimpleAnalytics({
   domain: process.env.VERCEL_PROJECT_PRODUCTION_URL!, // Shuould be set to the domain of your Next.js application.
-  nextConfig: { /* the rest of your Next.js config */ }
+  nextConfig: {
+    /* the rest of your Next.js config */
+  },
 });
 
 export default nextConfig;
@@ -83,21 +85,25 @@ export default function Page() {
 The function `trackPageview` can be used in Next.js Edge Middleware to track pageviews:
 
 #### Next.js 14 and later
+
 ```typescript
-import { type NextRequest, type NextFetchEvent, NextResponse } from "next/server";
+import {
+  type NextRequest,
+  type NextFetchEvent,
+  NextResponse,
+} from "next/server";
 import { trackPageview } from "@simpleanalytics/next/server";
 
 export function middleware(request: NextRequest, event: NextFetchEvent) {
   // Perform the call in the background (see: https://nextjs.org/docs/app/building-your-application/routing/middleware#waituntil-and-nextfetchevent)
-  event.waitUntil(
-    trackPageview({ request })
-  );
+  event.waitUntil(trackPageview({ request }));
 
   return NextResponse.next();
 }
 ```
 
 #### Next.js 13
+
 ```typescript
 import { type NextRequest, NextResponse } from "next/server";
 import { trackPageview } from "@simpleanalytics/next/server";
@@ -112,6 +118,7 @@ export async function middleware(request: NextRequest) {
 ### Tracking events in a server action
 
 #### Next.js 14 and later
+
 ```typescript
 "use server";
 

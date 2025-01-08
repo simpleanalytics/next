@@ -19,14 +19,17 @@ export const useSimpleAnalytics = (): UseSimpleAnalyticsResult => {
     [],
   );
 
-  const trackPageview = useCallback((path: string, params?: AnalyticsMetadata) => {
-    // Disable tracking on during SSR
-    if (typeof window === "undefined" || !window.sa_pageview) {
-      return;
-    }
+  const trackPageview = useCallback(
+    (path: string, params?: AnalyticsMetadata) => {
+      // Disable tracking on during SSR
+      if (typeof window === "undefined" || !window.sa_pageview) {
+        return;
+      }
 
-    return window.sa_pageview(path, params);
-  }, []);
+      return window.sa_pageview(path, params);
+    },
+    [],
+  );
 
   return { trackEvent, trackPageview };
 };

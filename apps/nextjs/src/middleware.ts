@@ -1,4 +1,8 @@
-import { type NextRequest, type NextFetchEvent, NextResponse } from "next/server";
+import {
+  type NextRequest,
+  type NextFetchEvent,
+  NextResponse,
+} from "next/server";
 import { trackPageview } from "@simpleanalytics/next/server";
 
 export function middleware(request: NextRequest, event: NextFetchEvent) {

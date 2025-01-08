@@ -29,9 +29,7 @@ export default function RootLayout({
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
         {children}
-        <SimpleAnalytics
-          settings={{ hostname: "simpleanalytics-next.vercel.app" }}
-        />
+        <SimpleAnalytics />
       </body>
     </html>
   );

@@ -12,8 +12,12 @@ type TrackEventOptions = {
   metadata?: AnalyticsMetadata;
 } & ServerContext;
 
-export async function trackEvent(eventName: string, options: TrackEventOptions) {
-  const headers = "request" in options ? options.request.headers : options.headers;
+export async function trackEvent(
+  eventName: string,
+  options: TrackEventOptions,
+) {
+  const headers =
+    "request" in options ? options.request.headers : options.headers;
 
   const hostname = options.hostname ?? process.env.SIMPLE_ANALYTICS_HOSTNAME;
 
@@ -40,15 +44,19 @@ export async function trackEvent(eventName: string, options: TrackEventOptions) 
 
   if (!response.ok) {
     try {
-      console.error(`Failed to track event: ${response.status}`, await response.json());
-    }
-    catch (error) {
+      console.error(
+        `Failed to track event: ${response.status}`,
+        await response.json(),
+      );
+    } catch (error) {
       console.error(`Failed to track event: ${response.status}`);
     }
   }
 }
 
-type ServerContextWithPath = { request: Request } | { path: string, headers: Headers };
+type ServerContextWithPath =
+  | { request: Request }
+  | { path: string; headers: Headers };
 
 type TrackPageviewOptions = {
   hostname?: string | undefined;
@@ -61,11 +69,12 @@ function getPath(request: Request) {
     return request.nextUrl.pathname;
   }
 
-  return (new URL(request.url)).pathname;
+  return new URL(request.url).pathname;
 }
 
 export async function trackPageview(options: TrackPageviewOptions) {
-  const headers = "request" in options ? options.request.headers : options.headers;
+  const headers =
+    "request" in options ? options.request.headers : options.headers;
 
   const hostname = options.hostname ?? process.env.SIMPLE_ANALYTICS_HOSTNAME;
 
@@ -82,7 +91,7 @@ export async function trackPageview(options: TrackPageviewOptions) {
     event: "pageview",
     path,
     ua: headers.get("user-agent") ?? `ServerSide/1.0 (+${hostname})`,
-  }
+  };
 
   const response = await fetch("https://queue.simpleanalyticscdn.com/events", {
     method: "POST",
@@ -94,9 +103,11 @@ export async function trackPageview(options: TrackPageviewOptions) {
 
   if (!response.ok) {
     try {
-      console.error(`Failed to track pageview: ${response.status}`, await response.json());
-    }
-    catch (error) {
+      console.error(
+        `Failed to track pageview: ${response.status}`,
+        await response.json(),
+      );
+    } catch (error) {
       console.error(`Failed to track pageview: ${response.status}`);
     }
   }
