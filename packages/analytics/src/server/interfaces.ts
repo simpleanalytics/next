@@ -26,10 +26,11 @@ export interface AnalyticsEvent {
   content?: string | undefined;
 }
 
-export type AnalyticsPageview = Omit<AnalyticsEvent, "type" | "event"> & Required<Pick<AnalyticsEvent, "path">> & {
-  type: "pageview";
-  event: "pageview";
-}
+export type AnalyticsPageview = Omit<AnalyticsEvent, "type" | "event"> &
+  Required<Pick<AnalyticsEvent, "path">> & {
+    type: "pageview";
+    event: "pageview";
+  };
 
 export interface IgnoredMetrics {
   utm?: boolean | undefined;

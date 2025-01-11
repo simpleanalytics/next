@@ -20,7 +20,8 @@ function parseDataProps(settings?: AnalyticsSettings) {
 
   return {
     "data-collect-dnt": settings.collectDnt,
-    "data-hostname": settings.hostname ?? process.env.NEXT_PUBLIC_SIMPLE_ANALYTICS_HOSTNAME,
+    "data-hostname":
+      settings.hostname ?? process.env.NEXT_PUBLIC_SIMPLE_ANALYTICS_HOSTNAME,
     "data-mode": settings.mode,
     "data-ignore-metrics": metrics === "" ? undefined : metrics,
     "data-ignore-pages": settings.ignorePages?.join(","),
