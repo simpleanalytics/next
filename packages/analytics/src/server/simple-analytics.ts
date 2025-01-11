@@ -3,12 +3,14 @@ import "server-only";
 import { NextRequest } from "next/server";
 import type { AnalyticsEvent, AnalyticsPageview } from "./interfaces";
 import type { AnalyticsMetadata } from "../interfaces";
+import { isDoNotTrackEnabled } from "./utils";
 
 type ServerContext = { request: Request } | { headers: Headers };
 
 type TrackEventOptions = {
   path?: string | undefined;
   hostname?: string | undefined;
+  collectDnt?: boolean | undefined;
   metadata?: AnalyticsMetadata;
 } & ServerContext;
 
@@ -23,6 +25,10 @@ export async function trackEvent(
 
   if (!hostname) {
     console.error("No hostname provided for Simple Analytics");
+    return;
+  }
+
+  if (isDoNotTrackEnabled(headers) && !options.collectDnt) {
     return;
   }
 
@@ -61,6 +67,7 @@ type ServerContextWithPath =
 type TrackPageviewOptions = {
   hostname?: string | undefined;
   metadata?: AnalyticsMetadata;
+  collectDnt?: boolean | undefined;
 } & ServerContextWithPath;
 
 function getPath(request: Request) {
@@ -80,6 +87,10 @@ export async function trackPageview(options: TrackPageviewOptions) {
 
   if (!hostname) {
     console.error("No hostname provided for Simple Analytics");
+    return;
+  }
+
+  if (isDoNotTrackEnabled(headers) && !options.collectDnt) {
     return;
   }
 
