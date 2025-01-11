@@ -1,6 +1,11 @@
 {
   "name": "@simpleanalytics/next",
   "version": "0.0.1",
+  "description": "Simple Analytics for Next.js",
+  "keywords": [
+    "analytics",
+    "simple analytics"
+  ],
   "license": "MIT",
   "exports": {
     ".": {
