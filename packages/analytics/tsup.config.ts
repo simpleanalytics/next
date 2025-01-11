@@ -10,6 +10,7 @@ export default defineConfig((options) => [
     sourcemap: true,
     dts: true,
     clean: true,
+    external: ["next", "react"],
     outDir: "dist", // Where you want your compiled files to live
     onSuccess: async () => {
       exec("tsc --emitDeclarationOnly");

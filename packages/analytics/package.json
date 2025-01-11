@@ -25,6 +25,9 @@
     "dev": "tsup --watch",
     "format": "prettier --write ."
   },
+  "dependencies": {
+    "server-only": "^0.0.1"
+  },
   "devDependencies": {
     "@types/node": "^22.10.5",
     "@types/react": "^19.0.4",
@@ -36,7 +39,12 @@
     "next": ">= 13",
     "react": "^18 || ^19"
   },
-  "dependencies": {
-    "server-only": "^0.0.1"
+  "peerDependenciesMeta": {
+    "next": {
+      "optional": true
+    },
+    "react": {
+      "optional": true
+    }
   }
 }
