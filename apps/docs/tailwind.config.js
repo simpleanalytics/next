@@ -15,6 +15,7 @@ export default {
     extend: {
       fontFamily: {
         sans: ["var(--font-inter)"],
+        "space-grotesk": ["var(--font-space-grotesk)"]
       }
     }
   }
