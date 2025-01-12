@@ -1,4 +1,5 @@
 import type { BaseLayoutProps } from "fumadocs-ui/layouts/shared";
+import { SimpleAnalyticsLogo } from "@/components/simple-analytics-logo";
 
 /**
  * Shared layout configurations
@@ -9,8 +10,14 @@ import type { BaseLayoutProps } from "fumadocs-ui/layouts/shared";
  */
 export const baseOptions: BaseLayoutProps = {
   nav: {
-    // can be JSX too!
-    title: "My App",
+    title: (
+      <>
+        <SimpleAnalyticsLogo className="size-3" />
+        <div>
+          <span className="font-space-grotesk">Simple Analytics</span> for Next.js
+        </div>
+      </>
+    ),
   },
   links: [
     {
