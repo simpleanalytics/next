@@ -80,13 +80,17 @@ function getPath(request: Request) {
 }
 
 export async function trackPageview(options: TrackPageviewOptions) {
-  const headers =
-    "request" in options ? options.request.headers : options.headers;
-
   const hostname = options.hostname ?? process.env.SIMPLE_ANALYTICS_HOSTNAME;
 
   if (!hostname) {
     console.error("No hostname provided for Simple Analytics");
+    return;
+  }
+
+  const headers = "request" in options ? options.request.headers : options.headers;
+
+  // We don't record non-GET requests
+  if ("request" in options && options.request.method !== "GET") {
     return;
   }
 
