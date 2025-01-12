@@ -28,3 +28,47 @@ bun add @simpleanalytics/next
 ```
 
 </Tabs>
+
+### Update the your Next.js config
+
+<Tabs groupId='config' persist items={['next.config.ts', 'next.config.mjs', "next.config.js"]}>
+
+```js tab="next.config.ts"
+import type { NextConfig } from "next";
+import withSimpleAnalytics from "@simpleanalytics/next/plugin";
+
+const nextConfig: NextConfig = {
+  /* config options here */
+};
+
+export default withSimpleAnalytics(nextConfig);
+```
+
+```js tab="next.config.mjs"
+// @ts-check
+
+import withSimpleAnalytics from "@simpleanalytics/next/plugin";
+
+/** @type {import('next').NextConfig} */
+const nextConfig = {
+  /* config options here */
+};
+
+export default withSimpleAnalytics(nextConfig);
+```
+
+```js tab="next.config.js"
+// @ts-check
+
+const withSimpleAnalytics = require("@simpleanalytics/next/plugin");
+
+/** @type {import('next').NextConfig} */
+const nextConfig = {
+  /* config options here */
+};
+
+module.exports =  withSimpleAnalytics(nextConfig);
+```
+
+</Tabs>
+
