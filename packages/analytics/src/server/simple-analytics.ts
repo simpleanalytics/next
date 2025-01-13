@@ -37,7 +37,7 @@ export async function trackEvent(
     hostname,
     event: eventName,
     metadata: options.metadata,
-    ua: headers.get("user-agent") ?? `ServerSide/1.0 (+${hostname})`,
+    ua: headers.get("user-agent") ?? "",
   };
 
   const response = await fetch("https://queue.simpleanalyticscdn.com/events", {
@@ -105,7 +105,7 @@ export async function trackPageview(options: TrackPageviewOptions) {
     hostname,
     event: "pageview",
     path,
-    ua: headers.get("user-agent") ?? `ServerSide/1.0 (+${hostname})`,
+    ua: headers.get("user-agent") ?? "",
   };
 
   const response = await fetch("https://queue.simpleanalyticscdn.com/events", {
