@@ -4,6 +4,7 @@ import { NextRequest } from "next/server";
 import type { AnalyticsEvent, AnalyticsPageview } from "./interfaces";
 import type { AnalyticsMetadata } from "../interfaces";
 import { isDoNotTrackEnabled } from "./utils";
+import { parseHeaders } from "./headers";
 
 type ServerContext = { request: Request } | { headers: Headers };
 
@@ -18,9 +19,6 @@ export async function trackEvent(
   eventName: string,
   options: TrackEventOptions,
 ) {
-  const headers =
-    "request" in options ? options.request.headers : options.headers;
-
   const hostname = options.hostname ?? process.env.SIMPLE_ANALYTICS_HOSTNAME;
 
   if (!hostname) {
@@ -28,7 +26,10 @@ export async function trackEvent(
     return;
   }
 
+  const headers = "request" in options ? options.request.headers : options.headers;
+
   if (isDoNotTrackEnabled(headers) && !options.collectDnt) {
+    console.log("Do not track enabled, not tracking event");
     return;
   }
 
@@ -37,8 +38,10 @@ export async function trackEvent(
     hostname,
     event: eventName,
     metadata: options.metadata,
-    ua: headers.get("user-agent") ?? "",
+    ...(parseHeaders(headers, {})),
   };
+
+  console.log("Tracking event", payload);
 
   const response = await fetch("https://queue.simpleanalyticscdn.com/events", {
     method: "POST",
@@ -95,6 +98,7 @@ export async function trackPageview(options: TrackPageviewOptions) {
   }
 
   if (isDoNotTrackEnabled(headers) && !options.collectDnt) {
+    console.log("Do not track enabled, not tracking pageview");
     return;
   }
 
@@ -105,8 +109,10 @@ export async function trackPageview(options: TrackPageviewOptions) {
     hostname,
     event: "pageview",
     path,
-    ua: headers.get("user-agent") ?? "",
+    ...(parseHeaders(headers, {})),
   };
+
+  console.log("Tracking pageview", payload);
 
   const response = await fetch("https://queue.simpleanalyticscdn.com/events", {
     method: "POST",
