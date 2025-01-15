@@ -9,11 +9,11 @@ function parseClientHints(clientHints?: ClientHints) {
   const values: string[] = [];
 
   if (clientHints?.viewport !== false) {
-    values.push("Viewport-Width", "Viewport-Height");
+    values.push("Sec-CH-Viewport-Width", "Sec-CH-Viewport-Height", "Viewport-Width", "Viewport-Height");
   }
 
   if (clientHints?.language !== false) {
-    values.push("Lang");
+    values.push("Sec-CH-Lang", "Lang");
   }
 
   if (values.length === 0) {
