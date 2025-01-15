@@ -5,7 +5,7 @@
 To install the package, run:
 
 ```bash
-TODO
+npm i https://pkg.pr.new/JeanMeijer/simpleanalytics-next/@simpleanalytics/next@<GIT COMMIT ID, e.g. 'ad733f9'>
 ```
 
 ## Usage
@@ -19,7 +19,8 @@ import type { NextConfig } from "next";
 import withSimpleAnalytics from "@simpleanalytics/next/plugin";
 
 const nextConfig: NextConfig = withSimpleAnalytics({
-  domain: process.env.VERCEL_PROJECT_PRODUCTION_URL!, // Shuould be set to the domain of your Next.js application.
+  // Optional, defaults to process.env.SIMPLE_ANALYTICS_HOSTNAME
+  hostname: process.env.VERCEL_PROJECT_PRODUCTION_URL!, // Shuould be set to the domain of your Next.js application.
   nextConfig: {
     /* the rest of your Next.js config */
   },
@@ -35,6 +36,7 @@ The client-side analytics component, `SimpleAnalytics`, imports the Simple Analy
 ```tsx
 import { SimpleAnalytics } from "@simpleanalytics/next/client";
 
+// Specifying the hostname in this component is optional, defaults to process.env.NEXT_PUBLIC_SIMPLE_ANALYTICS_HOSTNAME
 export default function RootLayout({
   children,
 }: Readonly<{
