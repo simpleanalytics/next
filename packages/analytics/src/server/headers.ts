@@ -13,7 +13,15 @@ export function parseViewportHeight(headers: Headers) {
 }
 
 export function parseLanguage(headers: Headers) {
-  return headers.get("Sec-CH-Lang") ?? headers.get("Lang") ?? undefined;
+  const language = headers.get("Sec-CH-Lang") ?? headers.get("Lang");
+
+  if (!language) {
+    const acceptLanguage = headers.get("Accept-Language");
+
+    return acceptLanguage ? acceptLanguage.split(",")[0] : undefined;
+  }
+
+  return language.split(",")[0]?.slice(0, -1);
 }
 
 export function parseTimezone(headers: Headers) {
