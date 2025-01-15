@@ -61,6 +61,10 @@ export function withSimpleAnalytics(options: WithSimpleAnalyticsOptions): NextCo
                 key: "Accept-CH",
                 value: clientHints,
               },
+              {
+                key: "Vary",
+                value: clientHints,
+              }
             ],
           },
           {
@@ -70,6 +74,10 @@ export function withSimpleAnalytics(options: WithSimpleAnalyticsOptions): NextCo
                 key: "Accept-CH",
                 value: clientHints,
               },
+              {
+                key: "Vary",
+                value: clientHints,
+              }
             ],
           },
         ]
