@@ -9,7 +9,7 @@ function parseClientHints(clientHints?: ClientHints) {
   const values: string[] = [];
 
   if (clientHints?.viewport !== false) {
-    values.push("Sec-CH-Viewport-Width", "Sec-CH-Viewport-Height", "Viewport-Width", "Viewport-Height");
+    values.push("Sec-CH-Viewport-Width", "Sec-CH-Viewport-Height", "Viewport-Width");
   }
 
   if (clientHints?.language !== false) {

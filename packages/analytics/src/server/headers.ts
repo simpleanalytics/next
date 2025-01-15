@@ -7,7 +7,7 @@ export function parseViewportWidth(headers: Headers) {
 }
 
 export function parseViewportHeight(headers: Headers) {
-  const height = headers.get("Sec-CH-Viewport-Height") ?? headers.get("Viewport-Height");
+  const height = headers.get("Sec-CH-Viewport-Height");
   
   return height ? Number.parseInt(height, 10) : undefined;
 }
