@@ -39,3 +39,11 @@ export interface IgnoredMetrics {
   viewportSize?: boolean | undefined;
   language?: boolean | undefined;
 }
+
+export type ServerComponentSearchParamsProp = Record<string, string | string[] | undefined>;
+
+export type ServerContextWithPath =
+  | { request: Request }
+  | { path: string; headers: Headers, searchParams?: Record<string, string | string[] | undefined> };
+
+export type PageviewServerContext = { path: string; headers: Headers, searchParams: URLSearchParams };

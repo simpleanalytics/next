@@ -1,10 +1,10 @@
 import "server-only";
 
-import { NextRequest } from "next/server";
-import type { AnalyticsEvent, AnalyticsPageview } from "./interfaces";
+import type { AnalyticsEvent, AnalyticsPageview, ServerContextWithPath } from "./interfaces";
 import type { AnalyticsMetadata } from "../interfaces";
-import { isDoNotTrackEnabled } from "./utils";
+import { isDoNotTrackEnabled, parseServerContext } from "./utils";
 import { parseHeaders } from "./headers";
+import { parseUtmParameters } from "./utm";
 
 type ServerContext = { request: Request } | { headers: Headers };
 
@@ -65,24 +65,11 @@ export async function trackEvent(
 
 const PROXY_PATHS = /^\/(proxy\.js|auto-events\.js|simple\/.*)$/;
 
-type ServerContextWithPath =
-  | { request: Request }
-  | { path: string; headers: Headers };
-
 type TrackPageviewOptions = {
   hostname?: string | undefined;
   metadata?: AnalyticsMetadata;
   collectDnt?: boolean | undefined;
 } & ServerContextWithPath;
-
-function getPath(request: Request) {
-  // When request is an NextRequest, the URL will already be parsed (see Next.js implementation)
-  if (request instanceof NextRequest) {
-    return request.nextUrl.pathname;
-  }
-
-  return new URL(request.url).pathname;
-}
 
 export async function trackPageview(options: TrackPageviewOptions) {
   const hostname = options.hostname ?? process.env.SIMPLE_ANALYTICS_HOSTNAME;
@@ -92,19 +79,17 @@ export async function trackPageview(options: TrackPageviewOptions) {
     return;
   }
 
-  const headers = "request" in options ? options.request.headers : options.headers;
-
   // We don't record non-GET requests
   if ("request" in options && options.request.method !== "GET") {
     return;
   }
 
+  const { path, headers, searchParams } = parseServerContext(options);
+
   if (isDoNotTrackEnabled(headers) && !options.collectDnt) {
     console.log("Do not track enabled, not tracking pageview");
     return;
   }
-
-  const path = "request" in options ? getPath(options.request) : options.path;
 
   if (PROXY_PATHS.test(path)) {
     return;
@@ -116,6 +101,7 @@ export async function trackPageview(options: TrackPageviewOptions) {
     event: "pageview",
     path,
     ...(parseHeaders(headers, {})),
+    ...(parseUtmParameters(searchParams, { strictUtm: false })),
   };
 
   console.log("Tracking pageview", payload);
