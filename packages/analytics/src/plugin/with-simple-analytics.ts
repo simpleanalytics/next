@@ -26,17 +26,16 @@ function parseClientHints(clientHints?: ClientHints) {
 interface WithSimpleAnalyticsOptions {
   hostname?: string;
   clientHints?: ClientHints;
-  nextConfig?: NextConfig;
 }
 
-export function withSimpleAnalytics(options: WithSimpleAnalyticsOptions): NextConfig {
-  const hostname = options.hostname ?? process.env.SIMPLE_ANALYTICS_HOSTNAME;
+export function withSimpleAnalytics(nextConfig: NextConfig, options?: WithSimpleAnalyticsOptions): NextConfig {
+  const hostname = options?.hostname ?? process.env.SIMPLE_ANALYTICS_HOSTNAME;
 
-  const clientHints = parseClientHints(options.clientHints);
+  const clientHints = parseClientHints(options?.clientHints);
   
   const nextAnalyticsConfig: NextConfig = {
     async rewrites() {
-      const existingRewrites = await options.nextConfig?.rewrites?.();
+      const existingRewrites = await nextConfig.rewrites?.();
 
       const rewrites = [
         {
@@ -69,7 +68,7 @@ export function withSimpleAnalytics(options: WithSimpleAnalyticsOptions): NextCo
     },
     ...(clientHints ? {
       async headers() {
-        const existingHeaders = await options.nextConfig?.headers?.();
+        const existingHeaders = await nextConfig?.headers?.();
 
         const headers = [
           {
@@ -109,5 +108,5 @@ export function withSimpleAnalytics(options: WithSimpleAnalyticsOptions): NextCo
     } : {}),
   };
 
-  return { ...options.nextConfig, ...nextAnalyticsConfig };
+  return { ...nextConfig, ...nextAnalyticsConfig };
 }

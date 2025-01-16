@@ -18,15 +18,14 @@ To enable client-side tracking and to ensure the Simple Analytics script you mus
 import type { NextConfig } from "next";
 import withSimpleAnalytics from "@simpleanalytics/next/plugin";
 
-const nextConfig: NextConfig = withSimpleAnalytics({
+const nextConfig: NextConfig = {
+  /* the rest of your Next.js config */
+};
+
+export default withSimpleAnalytics(nextConfig, {
   // Optional, defaults to process.env.SIMPLE_ANALYTICS_HOSTNAME
   hostname: process.env.VERCEL_PROJECT_PRODUCTION_URL!, // Shuould be set to the domain of your Next.js application.
-  nextConfig: {
-    /* the rest of your Next.js config */
-  },
 });
-
-export default nextConfig;
 ```
 
 ### Include the analytics script

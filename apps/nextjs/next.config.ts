@@ -1,8 +1,8 @@
 import type { NextConfig } from "next";
 import withSimpleAnalytics from "@simpleanalytics/next/plugin";
 
-const nextConfig: NextConfig = withSimpleAnalytics({
-  hostname: process.env.VERCEL_PROJECT_PRODUCTION_URL!,
-});
+const nextConfig: NextConfig = {
 
-export default nextConfig;
+};
+
+export default withSimpleAnalytics(nextConfig);
