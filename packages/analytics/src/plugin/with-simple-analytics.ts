@@ -33,10 +33,12 @@ export function withSimpleAnalytics(options: WithSimpleAnalyticsOptions): NextCo
   const hostname = options.hostname ?? process.env.SIMPLE_ANALYTICS_HOSTNAME;
 
   const clientHints = parseClientHints(options.clientHints);
-
+  
   const nextAnalyticsConfig: NextConfig = {
     async rewrites() {
-      return [
+      const existingRewrites = await options.nextConfig?.rewrites?.();
+
+      const rewrites = [
         {
           source: "/proxy.js",
           destination: `https://simpleanalyticsexternal.com/proxy.js?hostname=${hostname}&path=/simple`,
@@ -50,10 +52,26 @@ export function withSimpleAnalytics(options: WithSimpleAnalyticsOptions): NextCo
           destination: "https://queue.simpleanalyticscdn.com/:match*",
         },
       ];
+
+      if (!existingRewrites) {
+        return rewrites;
+      }
+
+      if (Array.isArray(existingRewrites)) {
+        return existingRewrites.concat(rewrites);
+      }
+
+      return {
+        beforeFiles: existingRewrites.beforeFiles,
+        afterFiles: existingRewrites.afterFiles.concat(rewrites),
+        fallback: existingRewrites.fallback,
+      };
     },
     ...(clientHints ? {
       async headers() {
-        return [
+        const existingHeaders = await options.nextConfig?.headers?.();
+
+        const headers = [
           {
             source: "/",
             headers: [
@@ -80,7 +98,13 @@ export function withSimpleAnalytics(options: WithSimpleAnalyticsOptions): NextCo
               }
             ],
           },
-        ]
+        ];
+
+        if (!existingHeaders) {
+          return headers;
+        }
+        
+        return existingHeaders.concat(headers);
       }
     } : {}),
   };
