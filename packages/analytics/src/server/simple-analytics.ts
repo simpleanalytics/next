@@ -63,6 +63,8 @@ export async function trackEvent(
   }
 }
 
+const PROXY_PATHS = /^\/(proxy\.js|auto-events\.js|simple\/.*)$/;
+
 type ServerContextWithPath =
   | { request: Request }
   | { path: string; headers: Headers };
@@ -103,6 +105,10 @@ export async function trackPageview(options: TrackPageviewOptions) {
   }
 
   const path = "request" in options ? getPath(options.request) : options.path;
+
+  if (PROXY_PATHS.test(path)) {
+    return;
+  }
 
   const payload: AnalyticsPageview = {
     type: "pageview",
