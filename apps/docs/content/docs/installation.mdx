@@ -2,12 +2,14 @@
 title: Quick Start
 description: Getting Started with Simple Analytics for Next.js
 ---
+To get started with Simple Analytics and start tracking visitors for your Next.js project, follow the steps below:
 
-Welcome to the docs! You can start writing documents in `/content/docs`.
+<Steps>
+<Step>
 
-## Installation
+### Install the `@simpleanalytics/next` package
 
-First, install the package `@simpleanalytics/next` from your package manager of choice.
+First install the `@simpleanalytics/next` package using your package manager of choice.
 
 <Tabs groupId='package-manager' persist items={['npm', 'pnpm', 'yarn', 'bun']}>
 
@@ -29,7 +31,15 @@ bun add @simpleanalytics/next
 
 </Tabs>
 
-### Update the your Next.js config
+</Step>
+
+<Step>
+
+### Add the `withSimpleAnalytics` plugin to your Next.js config
+
+The `withSimpleAnalytics` plugin enables proxying client-side tracking requests, and improves accuracy during server-side tracking.
+
+Change your Next.js config (located in the project root) as follows:
 
 <Tabs groupId='config' persist items={['next.config.ts', 'next.config.mjs', "next.config.js"]}>
 
@@ -71,4 +81,7 @@ module.exports =  withSimpleAnalytics(nextConfig);
 ```
 
 </Tabs>
+
+</Step>
+</Steps>
 
