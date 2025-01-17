@@ -7,7 +7,7 @@ To get started with Simple Analytics and start tracking visitors for your Next.j
 <Steps>
 <Step>
 
-### Install the `@simpleanalytics/next` package
+### Install the package
 
 First install the `@simpleanalytics/next` package using your package manager of choice.
 
@@ -35,7 +35,7 @@ bun add @simpleanalytics/next
 
 <Step>
 
-### Set environment variables
+### Configure environment variables
 
 You need to pass the website domain you have added to the Simple Analytics dashboard as an environment variable:
 
@@ -48,7 +48,7 @@ SIMPLE_ANALYTICS_HOSTNAME=example.com
 
 <Step>
 
-### Add the `withSimpleAnalytics` plugin to your Next.js config
+### Update Next.js configuration
 
 The `withSimpleAnalytics` plugin enables proxying client-side tracking requests, and improves accuracy during server-side tracking.
 
@@ -56,12 +56,12 @@ Change your Next.js config (located in the project root) as follows:
 
 <Tabs groupId='config' persist items={['next.config.ts', 'next.config.mjs', "next.config.js"]}>
 
-```js tab="next.config.ts"
+```ts tab="next.config.ts"
 import type { NextConfig } from "next";
 import withSimpleAnalytics from "@simpleanalytics/next/plugin";
 
 const nextConfig: NextConfig = {
-  /* config options here */
+  /* your existing config */
 };
 
 export default withSimpleAnalytics(nextConfig);
@@ -69,12 +69,11 @@ export default withSimpleAnalytics(nextConfig);
 
 ```js tab="next.config.mjs"
 // @ts-check
-
 import withSimpleAnalytics from "@simpleanalytics/next/plugin";
 
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-  /* config options here */
+  /* your existing config */
 };
 
 export default withSimpleAnalytics(nextConfig);
@@ -82,15 +81,14 @@ export default withSimpleAnalytics(nextConfig);
 
 ```js tab="next.config.js"
 // @ts-check
-
 const withSimpleAnalytics = require("@simpleanalytics/next/plugin");
 
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-  /* config options here */
+  /* your existing config */
 };
 
-module.exports =  withSimpleAnalytics(nextConfig);
+module.exports = withSimpleAnalytics(nextConfig);
 ```
 
 </Tabs>
