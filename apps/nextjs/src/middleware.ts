@@ -9,7 +9,7 @@ export function middleware(request: NextRequest, event: NextFetchEvent) {
 
   console.log("middleware", response.status, response.statusText);
 
-  return NextResponse.next();
+  return response;
 }
 
 export const config = {
