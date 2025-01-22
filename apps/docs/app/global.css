@@ -1,3 +1,11 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+:root {
+  @media (min-width: 768px) {
+    .md\:\[--fd-sidebar-width\:268px\] {
+      --fd-sidebar-width: 280px !important;
+    }
+  }
+}
