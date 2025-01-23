@@ -2,7 +2,7 @@
 
 import React, { Suspense } from "react";
 import Script from "next/script";
-import type { AnalyticsSettings } from "../interfaces";
+import type { AnalyticsSettings, AnalyticsMetadata } from "../interfaces";
 
 function parseDataProps(settings?: AnalyticsSettings) {
   if (!settings) {
@@ -44,3 +44,21 @@ export const SimpleAnalytics = (props: SimpleAnalyticsProps) => {
     </Suspense>
   );
 };
+
+export function trackEvent(eventName: string, params?: AnalyticsMetadata) {
+  // Disable tracking on during SSR
+  if (typeof window === "undefined" || !window.sa_event) {
+    return;
+  }
+
+  return window.sa_event(eventName, params);
+}
+
+export function trackPageview(path: string, params?: AnalyticsMetadata) {
+  // Disable tracking on during SSR
+  if (typeof window === "undefined" || !window.sa_pageview) {
+    return;
+  }
+
+  return window.sa_pageview(path, params);
+}
