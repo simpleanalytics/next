@@ -16,6 +16,11 @@ export default {
       fontFamily: {
         sans: ["var(--font-inter)"],
         "space-grotesk": ["var(--font-space-grotesk)"]
+      },
+      colors: {
+        brand: {
+          DEFAULT: "rgb(222 50 67)",
+        }
       }
     }
   }
