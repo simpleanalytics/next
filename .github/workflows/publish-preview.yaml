@@ -12,13 +12,16 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
 
-      - run: corepack enable
-      - uses: actions/setup-node@v4
+      - name: Enable Corepack
+        run: corepack enable
+
+      - name: Setup Node.js v22 LTS
+        uses: actions/setup-node@v4
         with:
           node-version: 22
           cache: "pnpm"
 
-      - name: Cache turbo build setup
+      - name: Cache Turborepo build setup
         uses: actions/cache@v4
         with:
           path: .turbo
@@ -29,7 +32,8 @@ jobs:
       - name: Install dependencies
         run: pnpm install
 
-      - name: Build
+      - name: Build package
         run: pnpm build --filter=@simpleanalytics/next
 
-      - run: pnpx pkg-pr-new publish './packages/analytics'
+      - name: Publish package
+        run: pnpx pkg-pr-new publish './packages/analytics'
