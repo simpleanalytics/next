@@ -1,0 +1,145 @@
+---
+title: Tracking Pageviews
+description: Using server-side pageview tracking using Middleware or Server Components
+---
+
+The `trackPageview` function can be used to track pageviews in server components.
+
+```ts
+import { trackPageview } from "@simpleanalytics/next/server";
+```
+
+You can track pageviews by passing the `Request` or `NextRequest` object to the `trackPageview` function.
+
+```ts
+trackPageview({ request });
+```
+
+```ts
+import { headers } from "next/headers";
+
+trackPageview({ path: "/blog", headers: await headers() });
+```
+
+## Tracking in Edge Middleware
+
+<Callout title="This feature is experimental" type="warn">
+This feature is an experiment and might not
+</Callout>
+
+You can add pageview tracing application-wide using `trackPageview` and Next.js Edge Middleware.
+
+<Tabs items={['Next.js 14 or later', 'Next.js 13']}>
+<Tab>
+
+```ts title="middleware.ts"
+import { NextRequest, NextFetchEvent, NextResponse } from "next/server";
+import { trackPageview } from "@simpleanalytics/next/server";
+
+export function middleware(request: NextRequest, event: NextFetchEvent) {
+  event.waitUntil(trackPageview({ request }));
+
+  return NextResponse.next();
+}
+
+export const config = {
+  matcher: [
+    /*
+     * Match all request paths except for the ones starting with:
+     * - api (API routes)
+     * - _next/static (static files)
+     * - _next/image (image optimization files)
+     * - favicon.ico, apple-icon.(jpg|jpeg|png), icon.(ico|jpg|jpeg|png|svg), sitemap.xml, robots.txt (metadata files)
+     */
+    '/((?!api|_next/static|_next/image|favicon.ico|sitemap.xml|robots.txt|apple-icon\.(?:jpg|jpeg|png)|icon\.(?:ico|jpg|jpeg|png|svg)).*)',
+  ],
+}
+```
+
+</Tab>
+
+<Tab>
+```ts title="middleware.ts"
+import { NextRequest, NextResponse } from "next/server";
+import { trackPageview } from "@simpleanalytics/next/server";
+
+export async function middleware(request: NextRequest) {
+  await trackPageview({ request });
+
+  return NextResponse.next();
+}
+
+export const config = {
+  matcher: [
+    /*
+     * Match all request paths except for the ones starting with:
+     * - api (API routes)
+     * - _next/static (static files)
+     * - _next/image (image optimization files)
+     * - favicon.ico, apple-icon.(jpg|jpeg|png), icon.(ico|jpg|jpeg|png|svg), sitemap.xml, robots.txt (metadata files)
+     */
+    '/((?!api|_next/static|_next/image|favicon.ico|sitemap.xml|robots.txt|apple-icon\.(?:jpg|jpeg|png)|icon\.(?:ico|jpg|jpeg|png|svg)).*)',
+  ],
+}
+```
+
+</Tab>
+
+</Tabs>
+
+## Tracking in Server Components
+
+You can track pageviews manually in React Server Components using `trackPageview`. 
+Enabling more granular control per page while tracking visitors, including specifying page specific metadata.
+
+<Callout title="Usage without request object">
+We use the request headers and must specify the path explicity because the request object is not accessible in Server Components.
+</Callout>
+
+
+<Callout type="warn">
+The function `headers()` [cannot](https://nextjs.org/docs/app/api-reference/functions/after#with-request-apis) be called inside the `after` callback in Server Components 
+</Callout>
+
+```tsx title="app/blog/page.tsx"
+import { after } from "next/server";
+import { headers } from "next/headers";
+import { trackPageview } from "@simpleanalytics/next/server";
+
+export default async function Page() {
+  // 
+  const headerList = await headers();
+
+  after(async () => {
+    await trackPageview("/blog", { headers: headerList });
+  });
+
+  return (
+    <> 
+      {/* ... */}
+    </>
+  )
+}
+```
+
+### Handling parameters in dynamic routes
+
+For routes containing dynamic segments (e.g. `app/blog/posts/[id]/page.tsx`), you can include the segments and reconstruct the path before passing it to `trackPageview`.
+
+```tsx title="app/blog/posts/[id]/page.tsx"
+interface PageProps {
+  params: Promise<{ id: string }>;
+}
+
+export default async function Page({ params }: PageProps) {
+  // ...
+
+  const { id } = await params;
+
+  after(async () => {
+    await trackPageview(`/blog/posts/${id}`, { headers: headerList });
+  });
+
+  // ...
+}
+```
