@@ -94,5 +94,45 @@ module.exports = withSimpleAnalytics(nextConfig);
 </Tabs>
 
 </Step>
+
+<Step>
+
+### Add the `SimpleAnalytics` component in your layout (optional)
+
+<Callout title="Server-side tracking">
+The use of the `SimpleAnalytics` component is required to enable client-side tracking.
+If you are instead interested in server-side tracking, see the relevant guides for [Pageview](/docs/server-side-usage/tracking-pageviews) and [Event Tracking](/docs/server-side-usage/tracking-events).
+</Callout>
+
+[//]: # (<Callout title="Pageviews are collected by default" type="warn">)
+
+[//]: # (The `SimpleAnalytics` component enables pageview tracking by default. )
+
+[//]: # (You can disable automatic pageview collection or disable certain metrics, see [Configuration]&#40;/docs/analytics-config&#41; to learn more. )
+
+[//]: # (</Callout>)
+
+The `SimpleAnalytics` component injects the Simple Analytics tracking script into your Next.js website, enabling collection of pageviews for visitors.
+
+```tsx title="app/layout.tsx"
+import { SimpleAnalytics } from "@simpleanalytics/next/client";
+
+export default function RootLayout({
+  children,
+}: Readonly<{
+  children: React.ReactNode;
+}>) {
+  return (
+    <html lang="en">
+      <body>
+        {children}
+        <SimpleAnalytics />
+      </body>
+    </html>
+  );
+}
+```
+
+</Step>
 </Steps>
 
