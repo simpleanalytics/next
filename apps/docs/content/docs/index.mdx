@@ -2,6 +2,44 @@
 title: Quick Start
 description: Getting Started with Simple Analytics for Next.js
 ---
+
+import { FingerprintIcon, ArrowLeftRightIcon, PawPrintIcon, ServerIcon } from 'lucide-react';
+
+## Introduction
+
+Simple Analytics for Next.js allows you to add privacy-friendly web analytics and event tracking to your Next.js website using [Simple Analytics](https://simpleanalytics.com) in a few simple steps.
+
+This library provides the following features:
+
+<Cards>
+  <Card
+    icon={<FingerprintIcon className="text-red-500" />}
+    title="No cookie banner required"
+  >
+    Cookie-less analytics, no personal data about visitors is stored.
+  </Card>
+  <Card
+    icon={<ArrowLeftRightIcon className="text-red-500" />}
+    title="Proxying analytics requests"
+  >
+    Analytics requests are proxied to prevent interference by ad blockers.
+  </Card>
+  <Card
+    icon={<PawPrintIcon className="text-red-500" />}
+    title="Track events"
+  >
+    Track custom events with metadata, both on the client and server.
+  </Card>
+  <Card
+    icon={<ServerIcon className="text-red-500" />}
+    title="Server-side tracking support"
+  >
+    Track pageviews on the server without client code using Middleware.
+  </Card>
+</Cards>
+
+## Getting started
+
 To get started with Simple Analytics and start tracking visitors for your Next.js project, follow the steps below:
 
 <Steps>
