@@ -25,7 +25,7 @@ export function parseLanguage(headers: Headers) {
 }
 
 export function parseTimezone(headers: Headers) {
-  return headers.get("X-Vercel-IP-Timezone") ?? headers.get("CloudFront-Viewer-Time-Zone") ?? undefined;
+  return headers.get("X-Vercel-IP-Timezone") ?? headers.get("CloudFront-Viewer-Time-Zone") ?? headers.get("Cf-Timezone") ?? undefined;
 }
 
 export function parseUserAgent(headers: Headers) {
