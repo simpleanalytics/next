@@ -1,10 +1,9 @@
 "use client";
 
-import { useSimpleAnalytics } from "@simpleanalytics/next";
+import { trackEvent } from "@simpleanalytics/next";
 import { useState } from "react";
 
 export default function Home() {
-  const { trackEvent } = useSimpleAnalytics();
   const [count, setCount] = useState(0);
 
   return (
