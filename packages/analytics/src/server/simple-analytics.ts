@@ -1,19 +1,16 @@
 import "server-only";
 
-import type { AnalyticsEvent, AnalyticsPageview, ServerContextWithPath } from "./interfaces";
+import { AnalyticsEvent, AnalyticsPageview, HeaderOnlyContext, ServerContext } from "./interfaces";
 import type { AnalyticsMetadata } from "../interfaces";
-import { isDoNotTrackEnabled, parseServerContext } from "./utils";
+import { isDoNotTrackEnabled, parseRequest } from "./utils";
 import { parseHeaders } from "./headers";
 import { parseUtmParameters } from "./utm";
 
-type ServerContext = { request: Request } | { headers: Headers };
-
 type TrackEventOptions = {
-  path?: string | undefined;
   hostname?: string | undefined;
   collectDnt?: boolean | undefined;
   metadata?: AnalyticsMetadata;
-} & ServerContext;
+} & (ServerContext | HeaderOnlyContext);
 
 export async function trackEvent(
   eventName: string,
@@ -69,7 +66,7 @@ type TrackPageviewOptions = {
   hostname?: string | undefined;
   metadata?: AnalyticsMetadata;
   collectDnt?: boolean | undefined;
-} & ServerContextWithPath;
+} & ServerContext;
 
 export async function trackPageview(options: TrackPageviewOptions) {
   const hostname = options.hostname ?? process.env.SIMPLE_ANALYTICS_HOSTNAME;
@@ -84,7 +81,8 @@ export async function trackPageview(options: TrackPageviewOptions) {
     return;
   }
 
-  const { path, headers, searchParams } = parseServerContext(options);
+  const { path, searchParams } = "path" in options ? options : parseRequest(options.request);
+  const headers = "headers" in options ? options.headers : options.request.headers;
 
   if (isDoNotTrackEnabled(headers) && !options.collectDnt) {
     console.log("Do not track enabled, not tracking pageview");
@@ -101,7 +99,7 @@ export async function trackPageview(options: TrackPageviewOptions) {
     event: "pageview",
     path,
     ...(parseHeaders(headers, {})),
-    ...(parseUtmParameters(searchParams, { strictUtm: false })),
+    ...(searchParams ? parseUtmParameters(searchParams, { strictUtm: false }) : {}),
   };
 
   console.log("Tracking pageview", payload);

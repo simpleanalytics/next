@@ -24,14 +24,27 @@ interface UtmParameters {
   term?: string | undefined;
 }
 
-export function parseUtmParameters(searchParams: URLSearchParams, options: UtmOptions) {
+export function parseUtmParameters(searchParams: URLSearchParams | Record<string, string | string[] | undefined>, options: UtmOptions) {
   const params: UtmParameters = {};
 
-  for (const [name, value] of searchParams.entries()) {
+  if (searchParams instanceof URLSearchParams) {
+    for (const [name, value] of searchParams.entries()) {
+      const param = parseUtmParameter(name, options.strictUtm);
+
+      if (param) {
+        params[param] = value;
+      }
+    }
+
+    return params;
+  }
+
+  for (const name in searchParams) {
+    const value = searchParams[name];
     const param = parseUtmParameter(name, options.strictUtm);
 
     if (param) {
-      params[param] = value;
+      params[param] = Array.isArray(value) ? value[0] : value;
     }
   }
 

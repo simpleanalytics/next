@@ -40,10 +40,10 @@ export interface IgnoredMetrics {
   language?: boolean | undefined;
 }
 
-export type ServerComponentSearchParamsProp = Record<string, string | string[] | undefined>;
+export type ServerContext = ServerContextWithRequest | ServerContextWithPath;
 
-export type ServerContextWithPath =
-  | { request: Request }
-  | { path: string; headers: Headers, searchParams?: Record<string, string | string[] | undefined> };
+export type ServerContextWithRequest = { request: Request };
 
-export type PageviewServerContext = { path: string; headers: Headers, searchParams: URLSearchParams };
+export type HeaderOnlyContext = { headers: Headers };
+
+export type ServerContextWithPath = { path: string; headers: Headers, searchParams?: Record<string, string | string[] | undefined> };
