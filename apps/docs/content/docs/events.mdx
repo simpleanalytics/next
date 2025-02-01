@@ -1,0 +1,225 @@
+---
+title: Track Events
+description: Using event tracking in Server Actions and Route Handlers
+---
+
+With Simple Analytics for Next.js you can collect events across your application, e.g. button clicks, or form submissions, using the `trackEvent` function.
+
+<Callout>
+  Learn more about events in the [Simple Analytics docs](https://docs.simpleanalytics.com/events).
+</Callout>
+
+## Tracking client-side events
+
+The client-side `trackEvent` function requires the `SimpleAnalytics` component to be used to track events in client components.
+
+```tsx title="page.tsx"
+"use client";
+
+import { trackEvent } from "@simpleanalytics/next/client";
+
+export default function Page() {
+  function addToCart() {
+    // ...
+
+    trackEvent("added_to_cart");
+  }
+
+  return (
+    <> 
+      {/* ... */}
+    </>
+  )
+}
+```
+
+## Adding metadata to events
+
+```tsx title="page.tsx"
+"use client";
+
+import { trackEvent } from "@simpleanalytics/next/client";
+
+export default function Page() {
+  function purchase() {
+    trackEvent("addToCart", {
+      metadata: {
+        product_id: "123",
+        amount: 99.99,
+        currency: "USD"
+      }
+    });
+  }
+
+  return (
+    <>
+      {/* ... */}
+    </>
+  )
+}
+```
+
+## Tracking server-side events
+
+### Usage in Server Actions
+
+<Tabs items={['Next.js 15.1 or later', 'Next.js 15.0', 'Next.js 14 and earlier']}>
+<Tab>
+
+```ts
+"use server";
+
+import { after } from "next/server";
+import { headers } from "next/headers";
+import { trackEvent } from "@simpleanalytics/next/server";
+
+export async function purchase() {
+  // ...
+
+  after(async () => {
+    await trackEvent("purchase", {
+      headers: await headers(),
+      metadata: {
+        
+      },
+    });
+  });
+
+  return { success: true };
+}
+```
+
+</Tab>
+
+<Tab>
+
+```ts
+"use server";
+
+import { unstable_after as after } from "next/server";
+import { headers } from "next/headers";
+import { trackEvent } from "@simpleanalytics/next/server";
+
+export async function exampleAction() {
+  // ...
+
+  after(async () => {
+    await trackEvent("event_in_example_action", {
+      headers: await headers(),
+    });
+  });
+
+  return { success: true };
+}
+```
+
+</Tab>
+
+<Tab>
+
+```ts
+"use server";
+
+import { headers } from "next/headers";
+import { waitUntil } from "@vercel/functions";
+import { trackEvent } from "@simpleanalytics/next/server";
+
+export async function exampleAction() {
+  // ...
+
+  waitUntil(
+    trackEvent("event_in_example_action", {
+      headers: headers(),
+    })
+  );
+
+  // or call trackEvent directly when you aren't using Vercel
+  // trackEvent("event_in_example_action", {
+  //  headers: headers(),
+  // });
+
+  return { success: true };
+}
+```
+
+</Tab>
+
+</Tabs>
+
+### Usage with Route Handlers
+
+<Tabs items={['Next.js 15.1 or later', 'Next.js 15.0', 'Next.js 14 and earlier']}>
+<Tab>
+
+```ts
+import { after, NextRequest, NextResponse } from "next/server";
+import { headers } from "next/headers";
+import { trackEvent } from "@simpleanalytics/next/server";
+
+export async function POST(request: NextRequest) {
+  // ...
+
+  after(async () => {
+    await trackEvent("event_in_example_action", {
+      // When running on Vercel passing the headers is not necessary.
+      headers: await headers(),
+    });
+  });
+
+  return NextResponse.json({ success: true });
+}
+```
+
+</Tab>
+
+<Tab>
+
+```ts
+import { unstable_after as after, NextRequest, NextResponse } from "next/server";
+import { headers } from "next/headers";
+import { trackEvent } from "@simpleanalytics/next/server";
+
+export async function POST(request: NextRequest) {
+  // ...
+
+  after(async () => {
+    await trackEvent("event_in_example_action", {
+      headers: await headers(),
+    });
+  });
+
+  return NextResponse.json({ success: true });
+}
+```
+
+</Tab>
+
+<Tab>
+
+```ts
+import { NextRequest, NextResponse } from "next/server";
+import { headers } from "next/headers";
+import { waitUntil } from "@vercel/functions";
+import { trackEvent } from "@simpleanalytics/next/server";
+
+export async function exampleAction() {
+  // ...
+
+  waitUntil(
+    trackEvent("event_in_example_action", {
+      headers: headers(),
+    })
+  );
+
+  // or call trackEvent directly when you aren't using Vercel
+  // trackEvent("event_in_example_action", {
+  //  headers: headers(),
+  // });
+
+  return NextResponse.json({ success: true });
+}
+```
+
+</Tab>
+
+</Tabs>
