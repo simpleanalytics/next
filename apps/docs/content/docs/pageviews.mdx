@@ -1,19 +1,20 @@
 ---
-title: Tracking Pageviews
-description: Using server-side pageview tracking using Middleware or Server Components
+title: Track Pageviews
+description: Using pageview tracking
 ---
 
-The `trackPageview` function can be used to track pageviews in server components.
+You can manual `trackPageview` function can be used to track pageviews in server components.
 
-```ts
-import { trackPageview } from "@simpleanalytics/next/server";
-```
+`
+import { trackPageview } from "@simpleanalytics/next/server"`
 
 You can track pageviews by passing the `Request` or `NextRequest` object to the `trackPageview` function.
 
 ```ts
+import { trackPageview } from "./simple-analytics";
 trackPageview({ request });
 ```
+
 
 ```ts
 import { headers } from "next/headers";
@@ -21,16 +22,25 @@ import { headers } from "next/headers";
 trackPageview({ path: "/blog", headers: await headers() });
 ```
 
-## Tracking in Edge Middleware
+## Tracking pageviews server-side
+
+<Callout title="">
+  Simple Analytics determines the country of the visitor based on their time zone. 
+  Unlike during client-side tracking, this information is not available on when receiving a request on the server.
+</Callout>
+
+However, certain hosting provider, e.g. [Vercel](https://vercel.com/docs/edge-network/headers/request-headers), [Cloudflare](https://developers.cloudflare.com/rules/transform/managed-transforms/reference/), and [Amazon CloudFront](https://docs.aws.amazon.com/AmazonCloudFront/latest/DeveloperGuide/adding-cloudfront-headers.html), might include the visitor's time zone (by default or optionally) in a request headers.
+
+If one of the headers is present, the time zone will automatically be include with the information send to Simple Analytics unless explicitly ignored.
+
+
+### Usage in Edge Middleware
 
 <Callout title="This feature is experimental" type="warn">
-This feature is an experiment and might not
+Tracking pageviews in middleware is an experimental feature and does not support the same functionality as the client-side tracking implementation.
 </Callout>
 
 You can add pageview tracing application-wide using `trackPageview` and Next.js Edge Middleware.
-
-<Tabs items={['Next.js 14 or later', 'Next.js 13']}>
-<Tab>
 
 ```ts title="middleware.ts"
 import { NextRequest, NextFetchEvent, NextResponse } from "next/server";
@@ -56,38 +66,13 @@ export const config = {
 }
 ```
 
-</Tab>
+#### Limitations
 
-<Tab>
-```ts title="middleware.ts"
-import { NextRequest, NextResponse } from "next/server";
-import { trackPageview } from "@simpleanalytics/next/server";
+TODO
 
-export async function middleware(request: NextRequest) {
-  await trackPageview({ request });
 
-  return NextResponse.next();
-}
 
-export const config = {
-  matcher: [
-    /*
-     * Match all request paths except for the ones starting with:
-     * - api (API routes)
-     * - _next/static (static files)
-     * - _next/image (image optimization files)
-     * - favicon.ico, apple-icon.(jpg|jpeg|png), icon.(ico|jpg|jpeg|png|svg), sitemap.xml, robots.txt (metadata files)
-     */
-    '/((?!api|_next/static|_next/image|favicon.ico|sitemap.xml|robots.txt|apple-icon\.(?:jpg|jpeg|png)|icon\.(?:ico|jpg|jpeg|png|svg)).*)',
-  ],
-}
-```
-
-</Tab>
-
-</Tabs>
-
-## Tracking in Server Components
+### Usage in Server Components
 
 You can track pageviews manually in React Server Components using `trackPageview`. 
 Enabling more granular control per page while tracking visitors, including specifying page specific metadata.
@@ -98,7 +83,7 @@ We use the request headers and must specify the path explicity because the reque
 
 
 <Callout type="warn">
-The function `headers()` [cannot](https://nextjs.org/docs/app/api-reference/functions/after#with-request-apis) be called inside the `after` callback in Server Components 
+The function `headers()` [cannot be called](https://nextjs.org/docs/app/api-reference/functions/after#with-request-apis) inside the `after` callback when used in a Server Component.
 </Callout>
 
 ```tsx title="app/blog/page.tsx"
@@ -107,7 +92,6 @@ import { headers } from "next/headers";
 import { trackPageview } from "@simpleanalytics/next/server";
 
 export default async function Page() {
-  // 
   const headerList = await headers();
 
   after(async () => {
