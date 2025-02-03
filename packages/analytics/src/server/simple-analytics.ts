@@ -1,7 +1,12 @@
 import "server-only";
 
-import { AnalyticsEvent, AnalyticsPageview, HeaderOnlyContext, ServerContext } from "./interfaces";
-import type { AnalyticsMetadata } from "../interfaces";
+import {
+  AnalyticsEvent,
+  AnalyticsPageview,
+  TrackingOptions,
+  HeaderOnlyContext,
+  ServerContext,
+} from "./interfaces";
 import { isDoNotTrackEnabled, parseRequest } from "./utils";
 import { parseHeaders } from "./headers";
 import { parseUtmParameters } from "./utm";
@@ -32,7 +37,7 @@ export async function trackEvent(
     hostname,
     event: eventName,
     metadata: options.metadata,
-    ...(parseHeaders(headers, {})),
+    ...parseHeaders(headers, options.ignoreMetrics),
   };
 
   const response = await fetch("https://queue.simpleanalyticscdn.com/events", {
@@ -57,11 +62,7 @@ export async function trackEvent(
 
 const PROXY_PATHS = /^\/(proxy\.js|auto-events\.js|simple\/.*)$/;
 
-type TrackPageviewOptions = {
-  hostname?: string | undefined;
-  metadata?: AnalyticsMetadata;
-  collectDnt?: boolean | undefined;
-} & ServerContext;
+type TrackPageviewOptions = TrackingOptions & ServerContext;
 
 export async function trackPageview(options: TrackPageviewOptions) {
   const hostname = options.hostname ?? process.env.SIMPLE_ANALYTICS_HOSTNAME;
@@ -95,7 +96,10 @@ export async function trackPageview(options: TrackPageviewOptions) {
     hostname,
     event: "pageview",
     path,
-    ...(searchParams ? parseUtmParameters(searchParams, { strictUtm: false }) : {}),
+    ...parseHeaders(headers, options.ignoreMetrics),
+    ...(searchParams
+      ? parseUtmParameters(searchParams, { strictUtm: options.strictUtm ?? true })
+      : {}),
   };
 
   const response = await fetch("https://queue.simpleanalyticscdn.com/events", {
