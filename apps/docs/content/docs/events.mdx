@@ -1,5 +1,5 @@
 ---
-title: Track Events
+title: Tracking Events
 description: Using event tracking in Server Actions and Route Handlers
 ---
 
@@ -35,6 +35,8 @@ export default function Page() {
 
 ## Adding metadata to events
 
+You can add additional metadata to events to provide more context about the event.
+
 ```tsx title="page.tsx"
 "use client";
 
@@ -58,6 +60,9 @@ export default function Page() {
 
 ## Tracking server-side events
 
+You can also track events in Server Actions and Route Handlers.
+However, you must explicitly pass the `request` object or the request headers to the `trackEvent` function.
+
 ### Usage in Server Actions
 
 <Tabs items={['Next.js 15.1 or later', 'Next.js 15.0', 'Next.js 14 and earlier']}>
@@ -76,8 +81,10 @@ export async function purchaseAction() {
   after(async () => {
     await trackEvent("purchase", {
       headers: await headers(),
+      // Pass metadata (optional)
       metadata: {
-        
+        product_id: "123",
+        currency: "EUR"
       },
     });
   });
@@ -103,6 +110,11 @@ export async function purchaseAction() {
   after(async () => {
     await trackEvent("purchase", {
       headers: await headers(),
+      // Pass metadata (optional)
+      metadata: {
+        product_id: "123",
+        currency: "EUR"
+      },
     });
   });
 
@@ -127,6 +139,11 @@ export async function purchaseAction() {
   waitUntil(
     trackEvent("purchase", {
       headers: headers(),
+      // Pass metadata (optional)
+      metadata: {
+        product_id: "123",
+        currency: "EUR"
+      },
     })
   );
 
@@ -156,11 +173,13 @@ export async function POST(request: NextRequest) {
   // ...
 
   after(async () => {
-    await trackEvent("event_in_example_action", {
-      // When running on Vercel passing the headers is not necessary.
-      headers: await headers(),
     await trackEvent("purchase", {
       request,
+      // Pass metadata (optional)
+      metadata: {
+        product_id: "123",
+        currency: "EUR"
+      },
     });
   });
 
@@ -182,6 +201,11 @@ export async function POST(request: NextRequest) {
   after(async () => {
     await trackEvent("event_in_example_action", {
       request,
+      // Pass metadata (optional)
+      metadata: {
+        product_id: "123",
+        currency: "EUR"
+      },
     });
   });
 
@@ -204,6 +228,11 @@ import { trackEvent } from "@simpleanalytics/next/server";
   waitUntil(
     trackEvent("event_in_example_action", {
       request,
+      // Pass metadata (optional)
+      metadata: {
+        product_id: "123",
+        currency: "EUR"
+      },
     })
   );
 
