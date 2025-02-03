@@ -1,26 +1,9 @@
 ---
-title: Track Pageviews
-description: Using pageview tracking
+title: Tracking Pageviews
+description: Using manual pageview tracking
 ---
 
-You can manual `trackPageview` function can be used to track pageviews in server components.
-
-`
-import { trackPageview } from "@simpleanalytics/next/server"`
-
-You can track pageviews by passing the `Request` or `NextRequest` object to the `trackPageview` function.
-
-```ts
-import { trackPageview } from "./simple-analytics";
-trackPageview({ request });
-```
-
-
-```ts
-import { headers } from "next/headers";
-
-trackPageview({ path: "/blog", headers: await headers() });
-```
+You can the `trackPageview` function to track pageviews on the server-side in the Next.js Edge Middleware or in Server Components.
 
 ## Tracking pageviews server-side
 
@@ -32,7 +15,6 @@ trackPageview({ path: "/blog", headers: await headers() });
 However, certain hosting provider, e.g. [Vercel](https://vercel.com/docs/edge-network/headers/request-headers), [Cloudflare](https://developers.cloudflare.com/rules/transform/managed-transforms/reference/), and [Amazon CloudFront](https://docs.aws.amazon.com/AmazonCloudFront/latest/DeveloperGuide/adding-cloudfront-headers.html), might include the visitor's time zone (by default or optionally) in a request headers.
 
 If one of the headers is present, the time zone will automatically be include with the information send to Simple Analytics unless explicitly ignored.
-
 
 ### Usage in Edge Middleware
 
@@ -65,12 +47,6 @@ export const config = {
   ],
 }
 ```
-
-#### Limitations
-
-TODO
-
-
 
 ### Usage in Server Components
 
@@ -111,12 +87,16 @@ export default async function Page() {
 For routes containing dynamic segments (e.g. `app/blog/posts/[id]/page.tsx`), you can include the segments and reconstruct the path before passing it to `trackPageview`.
 
 ```tsx title="app/blog/posts/[id]/page.tsx"
+import { after } from "next/server";
+import { headers } from "next/headers";
+import { trackPageview } from "@simpleanalytics/next/server";
+
 interface PageProps {
   params: Promise<{ id: string }>;
 }
 
 export default async function Page({ params }: PageProps) {
-  // ...
+  const headerList = await headers();
 
   const { id } = await params;
 
