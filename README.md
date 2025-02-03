@@ -16,6 +16,15 @@ npm i @simpleanalytics/next
 
 ## Usage
 
+### Configure environment variables
+
+You need to pass the website domain you have added to the [Simple Analytics dashboard](https://dashboard.simpleanalytics.com/) as an environment variable:
+
+```txt
+NEXT_PUBLIC_SIMPLE_ANALYTICS_HOSTNAME=example.com
+SIMPLE_ANALYTICS_HOSTNAME=example.com
+```
+
 ### Update your Next.js config to enable client-side analytics
 
 To enable client-side tracking and to ensure the Simple Analytics script you must add the Next.js plugin `withSimpleAnalytics` from `@simpleanalytics/next` in your Next.js config (`next.config.ts`):
