@@ -36,7 +36,7 @@ export default withSimpleAnalytics(nextConfig);
 The client-side analytics component, `SimpleAnalytics`, imports the Simple Analytics tracking script:
 
 ```tsx
-import { SimpleAnalytics } from "@simpleanalytics/next/client";
+import { SimpleAnalytics } from "@simpleanalytics/next";
 
 export default function RootLayout({
   children,
@@ -64,7 +64,7 @@ This requires the `<SimpleAnalytics />` component to be present on the page or l
 ```tsx
 "use client";
 
-import { trackEvent } from "@simpleanalytics/next/client";
+import { trackEvent } from "@simpleanalytics/next";
 import { useState } from "react";
 
 export default function Page() {

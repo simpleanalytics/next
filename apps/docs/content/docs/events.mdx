@@ -16,7 +16,7 @@ The client-side `trackEvent` function requires the `SimpleAnalytics` component t
 ```tsx title="page.tsx"
 "use client";
 
-import { trackEvent } from "@simpleanalytics/next/client";
+import { trackEvent } from "@simpleanalytics/next";
 
 export default function Page() {
   function addToCart() {
@@ -38,16 +38,13 @@ export default function Page() {
 ```tsx title="page.tsx"
 "use client";
 
-import { trackEvent } from "@simpleanalytics/next/client";
+import { trackEvent } from "@simpleanalytics/next";
 
 export default function Page() {
   function purchase() {
     trackEvent("addToCart", {
-      metadata: {
-        product_id: "123",
-        amount: 99.99,
-        currency: "USD"
-      }
+      product_id: "123",
+      currency: "EUR"
     });
   }
 
@@ -73,7 +70,7 @@ import { after } from "next/server";
 import { headers } from "next/headers";
 import { trackEvent } from "@simpleanalytics/next/server";
 
-export async function purchase() {
+export async function purchaseAction() {
   // ...
 
   after(async () => {
@@ -100,11 +97,11 @@ import { unstable_after as after } from "next/server";
 import { headers } from "next/headers";
 import { trackEvent } from "@simpleanalytics/next/server";
 
-export async function exampleAction() {
+export async function purchaseAction() {
   // ...
 
   after(async () => {
-    await trackEvent("event_in_example_action", {
+    await trackEvent("purchase", {
       headers: await headers(),
     });
   });
@@ -124,11 +121,11 @@ import { headers } from "next/headers";
 import { waitUntil } from "@vercel/functions";
 import { trackEvent } from "@simpleanalytics/next/server";
 
-export async function exampleAction() {
+export async function purchaseAction() {
   // ...
 
   waitUntil(
-    trackEvent("event_in_example_action", {
+    trackEvent("purchase", {
       headers: headers(),
     })
   );
@@ -153,7 +150,6 @@ export async function exampleAction() {
 
 ```ts
 import { after, NextRequest, NextResponse } from "next/server";
-import { headers } from "next/headers";
 import { trackEvent } from "@simpleanalytics/next/server";
 
 export async function POST(request: NextRequest) {
@@ -163,6 +159,8 @@ export async function POST(request: NextRequest) {
     await trackEvent("event_in_example_action", {
       // When running on Vercel passing the headers is not necessary.
       headers: await headers(),
+    await trackEvent("purchase", {
+      request,
     });
   });
 
@@ -176,7 +174,6 @@ export async function POST(request: NextRequest) {
 
 ```ts
 import { unstable_after as after, NextRequest, NextResponse } from "next/server";
-import { headers } from "next/headers";
 import { trackEvent } from "@simpleanalytics/next/server";
 
 export async function POST(request: NextRequest) {
@@ -184,7 +181,7 @@ export async function POST(request: NextRequest) {
 
   after(async () => {
     await trackEvent("event_in_example_action", {
-      headers: await headers(),
+      request,
     });
   });
 
@@ -198,16 +195,15 @@ export async function POST(request: NextRequest) {
 
 ```ts
 import { NextRequest, NextResponse } from "next/server";
-import { headers } from "next/headers";
 import { waitUntil } from "@vercel/functions";
 import { trackEvent } from "@simpleanalytics/next/server";
 
-export async function exampleAction() {
+  export async function POST(request: NextRequest) {
   // ...
 
   waitUntil(
     trackEvent("event_in_example_action", {
-      headers: headers(),
+      request,
     })
   );
 
