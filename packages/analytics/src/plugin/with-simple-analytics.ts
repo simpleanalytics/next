@@ -9,7 +9,11 @@ function parseClientHints(clientHints?: ClientHints) {
   const values: string[] = [];
 
   if (clientHints?.viewport !== false) {
-    values.push("Sec-CH-Viewport-Width", "Sec-CH-Viewport-Height", "Viewport-Width");
+    values.push(
+      "Sec-CH-Viewport-Width",
+      "Sec-CH-Viewport-Height",
+      "Viewport-Width",
+    );
   }
 
   if (clientHints?.language !== false) {
@@ -28,11 +32,14 @@ interface WithSimpleAnalyticsOptions {
   clientHints?: ClientHints;
 }
 
-export function withSimpleAnalytics(nextConfig: NextConfig, options?: WithSimpleAnalyticsOptions): NextConfig {
+export function withSimpleAnalytics(
+  nextConfig: NextConfig,
+  options?: WithSimpleAnalyticsOptions,
+): NextConfig {
   const hostname = options?.hostname ?? process.env.SIMPLE_ANALYTICS_HOSTNAME;
 
   const clientHints = parseClientHints(options?.clientHints);
-  
+
   const nextAnalyticsConfig: NextConfig = {
     async rewrites() {
       const existingRewrites = await nextConfig.rewrites?.();
@@ -66,46 +73,48 @@ export function withSimpleAnalytics(nextConfig: NextConfig, options?: WithSimple
         fallback: existingRewrites.fallback,
       };
     },
-    ...(clientHints ? {
-      async headers() {
-        const existingHeaders = await nextConfig?.headers?.();
+    ...(clientHints
+      ? {
+          async headers() {
+            const existingHeaders = await nextConfig?.headers?.();
 
-        const headers = [
-          {
-            source: "/",
-            headers: [
+            const headers = [
               {
-                key: "Accept-CH",
-                value: clientHints,
+                source: "/",
+                headers: [
+                  {
+                    key: "Accept-CH",
+                    value: clientHints,
+                  },
+                  {
+                    key: "Vary",
+                    value: clientHints,
+                  },
+                ],
               },
               {
-                key: "Vary",
-                value: clientHints,
-              }
-            ],
-          },
-          {
-            source: "/([^_].*)",
-            headers: [
-              {
-                key: "Accept-CH",
-                value: clientHints,
+                source: "/([^_].*)",
+                headers: [
+                  {
+                    key: "Accept-CH",
+                    value: clientHints,
+                  },
+                  {
+                    key: "Vary",
+                    value: clientHints,
+                  },
+                ],
               },
-              {
-                key: "Vary",
-                value: clientHints,
-              }
-            ],
-          },
-        ];
+            ];
 
-        if (!existingHeaders) {
-          return headers;
+            if (!existingHeaders) {
+              return headers;
+            }
+
+            return existingHeaders.concat(headers);
+          },
         }
-        
-        return existingHeaders.concat(headers);
-      }
-    } : {}),
+      : {}),
   };
 
   return { ...nextConfig, ...nextAnalyticsConfig };

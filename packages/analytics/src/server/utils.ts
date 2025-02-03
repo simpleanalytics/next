@@ -8,5 +8,5 @@ export function parseRequest(request: Request) {
   return {
     path: url.pathname,
     searchParams: url.searchParams,
-  }
+  };
 }

@@ -14,7 +14,8 @@ export const baseOptions: BaseLayoutProps = {
       <>
         <SimpleAnalyticsLogo className="size-3" />
         <div>
-          <span className="font-space-grotesk">Simple Analytics</span> for Next.js
+          <span className="font-space-grotesk">Simple Analytics</span> for
+          Next.js
         </div>
       </>
     ),

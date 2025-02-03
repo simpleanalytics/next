@@ -24,7 +24,10 @@ interface UtmParameters {
   term?: string | undefined;
 }
 
-export function parseUtmParameters(searchParams: URLSearchParams | Record<string, string | string[] | undefined>, options: UtmOptions) {
+export function parseUtmParameters(
+  searchParams: URLSearchParams | Record<string, string | string[] | undefined>,
+  options: UtmOptions,
+) {
   const params: UtmParameters = {};
 
   if (searchParams instanceof URLSearchParams) {

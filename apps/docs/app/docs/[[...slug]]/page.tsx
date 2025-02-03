@@ -9,7 +9,7 @@ import {
 import defaultMdxComponents from "fumadocs-ui/mdx";
 import { Tab, Tabs } from "fumadocs-ui/components/tabs";
 import { Step, Steps } from "fumadocs-ui/components/steps";
-import { createTypeTable } from 'fumadocs-typescript/ui';
+import { createTypeTable } from "fumadocs-typescript/ui";
 
 const { AutoTypeTable } = createTypeTable();
 
@@ -30,7 +30,16 @@ export default async function Page(props: {
       <DocsTitle>{page.data.title}</DocsTitle>
       <DocsDescription>{page.data.description}</DocsDescription>
       <DocsBody>
-        <MDX components={{ ...defaultMdxComponents, Tabs, Tab, Steps, Step, AutoTypeTable }} />
+        <MDX
+          components={{
+            ...defaultMdxComponents,
+            Tabs,
+            Tab,
+            Steps,
+            Step,
+            AutoTypeTable,
+          }}
+        />
       </DocsBody>
     </DocsPage>
   );

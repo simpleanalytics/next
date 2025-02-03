@@ -8,5 +8,5 @@ export const { docs, meta } = defineDocs({
 export default defineConfig({
   mdxOptions: {
     remarkPlugins: [remarkInstall],
-  }
+  },
 });

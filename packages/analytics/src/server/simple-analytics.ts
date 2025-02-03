@@ -6,11 +6,7 @@ import { isDoNotTrackEnabled, parseRequest } from "./utils";
 import { parseHeaders } from "./headers";
 import { parseUtmParameters } from "./utm";
 
-type TrackEventOptions = {
-  hostname?: string | undefined;
-  collectDnt?: boolean | undefined;
-  metadata?: AnalyticsMetadata;
-} & (ServerContext | HeaderOnlyContext);
+type TrackEventOptions = TrackingOptions & (ServerContext | HeaderOnlyContext);
 
 export async function trackEvent(
   eventName: string,
@@ -23,7 +19,8 @@ export async function trackEvent(
     return;
   }
 
-  const headers = "request" in options ? options.request.headers : options.headers;
+  const headers =
+    "request" in options ? options.request.headers : options.headers;
 
   if (isDoNotTrackEnabled(headers) && !options.collectDnt) {
     console.log("Do not track enabled, not tracking event");
@@ -37,8 +34,6 @@ export async function trackEvent(
     metadata: options.metadata,
     ...(parseHeaders(headers, {})),
   };
-
-  console.log("Tracking event", payload);
 
   const response = await fetch("https://queue.simpleanalyticscdn.com/events", {
     method: "POST",
@@ -81,8 +76,10 @@ export async function trackPageview(options: TrackPageviewOptions) {
     return;
   }
 
-  const { path, searchParams } = "path" in options ? options : parseRequest(options.request);
-  const headers = "headers" in options ? options.headers : options.request.headers;
+  const { path, searchParams } =
+    "path" in options ? options : parseRequest(options.request);
+  const headers =
+    "headers" in options ? options.headers : options.request.headers;
 
   if (isDoNotTrackEnabled(headers) && !options.collectDnt) {
     console.log("Do not track enabled, not tracking pageview");
@@ -98,11 +95,8 @@ export async function trackPageview(options: TrackPageviewOptions) {
     hostname,
     event: "pageview",
     path,
-    ...(parseHeaders(headers, {})),
     ...(searchParams ? parseUtmParameters(searchParams, { strictUtm: false }) : {}),
   };
-
-  console.log("Tracking pageview", payload);
 
   const response = await fetch("https://queue.simpleanalyticscdn.com/events", {
     method: "POST",
