@@ -19,6 +19,7 @@ function parseDataProps(settings?: SimpleAnalyticsProps) {
     : undefined;
 
   return {
+    "data-auto-collect": settings.autoCollect,
     "data-collect-dnt": settings.collectDnt,
     "data-hostname":
       settings.hostname ?? process.env.NEXT_PUBLIC_SIMPLE_ANALYTICS_HOSTNAME,
@@ -32,6 +33,7 @@ function parseDataProps(settings?: SimpleAnalyticsProps) {
 }
 
 interface SimpleAnalyticsProps {
+  autoCollect?: boolean;
   collectDnt?: boolean;
   hostname?: string;
   mode?: "dash";
