@@ -19,10 +19,6 @@
     "./plugin": {
       "types": "./dist/plugin/index.d.ts",
       "default": "./dist/plugin/index.js"
-    },
-    "./experimental": {
-      "types": "./dist/experimental/index.d.ts",
-      "import": "./dist/experimental/index.js"
     }
   },
   "scripts": {
