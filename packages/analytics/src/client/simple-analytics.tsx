@@ -2,9 +2,9 @@
 
 import React, { Suspense } from "react";
 import Script from "next/script";
-import type { AnalyticsSettings, AnalyticsMetadata } from "../interfaces";
+import type { AnalyticsMetadata } from "../interfaces";
 
-function parseDataProps(settings?: AnalyticsSettings) {
+function parseDataProps(settings?: SimpleAnalyticsProps) {
   if (!settings) {
     return {
       "data-hostname": process.env.NEXT_PUBLIC_SIMPLE_ANALYTICS_HOSTNAME,
@@ -32,11 +32,29 @@ function parseDataProps(settings?: AnalyticsSettings) {
 }
 
 interface SimpleAnalyticsProps {
-  settings?: AnalyticsSettings;
+  collectDnt?: boolean;
+  hostname?: string;
+  mode?: "dash";
+  ignoreMetrics?: {
+    referrer?: boolean;
+    utm?: boolean;
+    country?: boolean;
+    session?: boolean;
+    timeonpage?: boolean;
+    scrolled?: boolean;
+    useragent?: boolean;
+    screensize?: boolean;
+    viewportsize?: boolean;
+    language?: boolean;
+  };
+  ignorePages?: string[];
+  allowParams?: string[];
+  nonUniqueParams?: string[];
+  strictUtm?: boolean;
 }
 
 export const SimpleAnalytics = (props: SimpleAnalyticsProps) => {
-  const dataProps = parseDataProps(props.settings);
+  const dataProps = parseDataProps(props);
 
   return (
     <Suspense fallback={null}>
