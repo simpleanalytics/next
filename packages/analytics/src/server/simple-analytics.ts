@@ -1,6 +1,6 @@
 import "server-only";
 
-import {
+import type {
   AnalyticsEvent,
   AnalyticsPageview,
   TrackingOptions,
@@ -97,8 +97,10 @@ export async function trackPageview(options: TrackPageviewOptions) {
     event: "pageview",
     path,
     ...parseHeaders(headers, options.ignoreMetrics),
-    ...(searchParams
-      ? parseUtmParameters(searchParams, { strictUtm: options.strictUtm ?? true })
+    ...(searchParams && !options.ignoreMetrics?.utm
+      ? parseUtmParameters(searchParams, {
+          strictUtm: options.strictUtm ?? true,
+        })
       : {}),
   };
 

@@ -38,7 +38,10 @@ export function parseUserAgent(headers: Headers) {
   return headers.get("User-Agent") ?? "";
 }
 
-export function parseHeaders(headers: Headers, ignoredMetrics: IgnoredMetrics = {}) {
+export function parseHeaders(
+  headers: Headers,
+  ignoredMetrics: IgnoredMetrics = {},
+) {
   return {
     ua: !ignoredMetrics.userAgent ? parseUserAgent(headers) : "",
 

@@ -1,6 +1,5 @@
 # Simple Analytics for Next.js
 
-
 This package provides a simple way to add privacy-friendly pageview and event tracking using Simple Analytics to your Next.js application.
 
 ## Documentation
@@ -48,7 +47,7 @@ export default function RootLayout({
     <html lang="en">
       <body>
         {children}
-        <SimpleAnalytics/>
+        <SimpleAnalytics />
       </body>
     </html>
   );
@@ -58,6 +57,7 @@ export default function RootLayout({
 ### Tracking events
 
 #### Usage in client components
+
 To start tracking programmatically tracking events in client components use the `trackEvent` function.
 This requires the `<SimpleAnalytics />` component to be present on the page or layout.
 
@@ -84,7 +84,7 @@ export default function Page() {
 
 #### Usage in Server Actions
 
-To track events in server actions, use the `trackEvent` function from `@simpleanalytics/next/server`. 
+To track events in server actions, use the `trackEvent` function from `@simpleanalytics/next/server`.
 This function requires you to pass the request headers that can be obtained using `headers`.
 
 ```typescript
