@@ -3,7 +3,18 @@ title: Tracking Pageviews
 description: Using manual pageview tracking
 ---
 
-You can the `trackPageview` function to track pageviews on the server-side in the Next.js Edge Middleware or in Server Components.
+The `trackPageview` function can be used to track pageviews manually.
+You might use manual page tracking to add additional metadata to the pageview, e.g. whether the user is signed in. 
+
+### Disabling automatic pageview collection
+
+The `SimpleAnalytics` component automatically collects pageviews, if we want to collect pageviews manually we should disable auto collection to prevent recording duplicate pageviews.
+
+We can disable automatic pageview collection by setting the `autoCollect` property to `false`:
+
+```tsx
+<SimpleAnalytics autoCollect={false} />
+```
 
 ## Tracking pageviews server-side
 
