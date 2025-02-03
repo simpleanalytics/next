@@ -5,6 +5,11 @@ import Script from "next/script";
 import type { AnalyticsMetadata } from "../interfaces";
 
 function parseDataProps(settings?: SimpleAnalyticsProps) {
+  if (!process.env.NEXT_PUBLIC_SIMPLE_ANALYTICS_HOSTNAME) {
+    console.error("No hostname provided for Simple Analytics");
+    return {};
+  }
+
   if (!settings) {
     return {
       "data-hostname": process.env.NEXT_PUBLIC_SIMPLE_ANALYTICS_HOSTNAME,
