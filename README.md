@@ -1,11 +1,18 @@
 # Simple Analytics for Next.js
 
+
+This package provides a simple way to add privacy-friendly pageview and event tracking using Simple Analytics to your Next.js application.
+
+## Documentation
+
+You can find the full documentation for this package at [simpleanalytics-next-docs.vercel.app](https://simpleanalytics-next-docs.vercel.app).
+
 ## Installation
 
 To install the package, run:
 
 ```bash
-npm i https://pkg.pr.new/JeanMeijer/simpleanalytics-next/@simpleanalytics/next@<GIT COMMIT ID, e.g. 'ad733f9'>
+npm i @simpleanalytics/next
 ```
 
 ## Usage
@@ -15,17 +22,14 @@ npm i https://pkg.pr.new/JeanMeijer/simpleanalytics-next/@simpleanalytics/next@<
 To enable client-side tracking and to ensure the Simple Analytics script you must add the Next.js plugin `withSimpleAnalytics` from `@simpleanalytics/next` in your Next.js config (`next.config.ts`):
 
 ```typescript
-import type { NextConfig } from "next";
+import { NextConfig } from "next";
 import withSimpleAnalytics from "@simpleanalytics/next/plugin";
 
 const nextConfig: NextConfig = {
   /* the rest of your Next.js config */
 };
 
-export default withSimpleAnalytics(nextConfig, {
-  // Optional, defaults to process.env.SIMPLE_ANALYTICS_HOSTNAME
-  hostname: process.env.VERCEL_PROJECT_PRODUCTION_URL!, // Shuould be set to the domain of your Next.js application.
-});
+export default withSimpleAnalytics(nextConfig);
 ```
 
 ### Include the analytics script
@@ -35,7 +39,6 @@ The client-side analytics component, `SimpleAnalytics`, imports the Simple Analy
 ```tsx
 import { SimpleAnalytics } from "@simpleanalytics/next/client";
 
-// Specifying the hostname in this component is optional, defaults to process.env.NEXT_PUBLIC_SIMPLE_ANALYTICS_HOSTNAME
 export default function RootLayout({
   children,
 }: Readonly<{
@@ -45,28 +48,26 @@ export default function RootLayout({
     <html lang="en">
       <body>
         {children}
-        <SimpleAnalytics
-          settings={{ hostname: "simpleanalytics-next.vercel.app" }}
-        />
+        <SimpleAnalytics/>
       </body>
     </html>
   );
 }
 ```
 
-### Tracking events and pageviews on the client
+### Tracking events
 
-The React hook, `useSimpleAnalytics`, provides methods `trackEvent` and `trackPageview` for programmatically tracking events or pageviews in client components. Requires the `<SimpleAnalytics />` component to be present on the page or layout.
+#### Usage in client components
+To start tracking programmatically tracking events in client components use the `trackEvent` function.
+This requires the `<SimpleAnalytics />` component to be present on the page or layout.
 
 ```tsx
 "use client";
 
-import { useSimpleAnalytics } from "@simpleanalytics/next/client";
+import { trackEvent } from "@simpleanalytics/next/client";
 import { useState } from "react";
 
 export default function Page() {
-  const { trackEvent } = useSimpleAnalytics();
-
   return (
     <div>
       <button
@@ -81,44 +82,10 @@ export default function Page() {
 }
 ```
 
-### Tracking pageviews using Next.js Edge Middleware
+#### Usage in Server Actions
 
-The function `trackPageview` can be used in Next.js Edge Middleware to track pageviews:
-
-#### Next.js 14 and later
-
-```typescript
-import {
-  type NextRequest,
-  type NextFetchEvent,
-  NextResponse,
-} from "next/server";
-import { trackPageview } from "@simpleanalytics/next/server";
-
-export function middleware(request: NextRequest, event: NextFetchEvent) {
-  // Perform the call in the background (see: https://nextjs.org/docs/app/building-your-application/routing/middleware#waituntil-and-nextfetchevent)
-  event.waitUntil(trackPageview({ request }));
-
-  return NextResponse.next();
-}
-```
-
-#### Next.js 13
-
-```typescript
-import { type NextRequest, NextResponse } from "next/server";
-import { trackPageview } from "@simpleanalytics/next/server";
-
-export async function middleware(request: NextRequest) {
-  await trackPageview({ request });
-
-  return NextResponse.next();
-}
-```
-
-### Tracking events in a server action
-
-#### Next.js 14 and later
+To track events in server actions, use the `trackEvent` function from `@simpleanalytics/next/server`. 
+This function requires you to pass the request headers that can be obtained using `headers`.
 
 ```typescript
 "use server";
@@ -132,7 +99,6 @@ export async function exampleAction() {
 
   after(async () => {
     await trackEvent("event_in_example_action", {
-      // When running on Vercel passing the headers is not necessary.
       headers: await headers(),
     });
   });
