@@ -35,11 +35,7 @@ export async function trackPageview(options: TrackPageviewOptions) {
     return;
   }
 
-  if (
-    PROXY_PATHS.test(path) ||
-    (process.env.EXPERIMENTAL_ANALYTICS_MIDDLEWARE === "1" &&
-      (await isExistingRoute(path)))
-  ) {
+  if (PROXY_PATHS.test(path) || !(await isExistingRoute(path))) {
     return;
   }
 

@@ -4,7 +4,7 @@ interface RoutesModule {
 
 export async function isExistingRoute(path: string) {
   if (process.env.EXPERIMENTAL_ANALYTICS_MIDDLEWARE !== "1") {
-    return;
+    return true;
   }
 
   // @ts-expect-error
