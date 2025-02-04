@@ -304,9 +304,8 @@ export function withRoutes(nextConfig: NextConfig = {}): NextConfig {
   return {
     ...nextConfig,
     webpack(config: any, options: any) {
-      const { isServer, dir, dev } = options;
+      const { isServer, dir } = options;
 
-      console.log(isServer, dir, dev);
       // Only run on server-side build
       if (isServer) {
         const baseDir = getBaseDir(dir);
