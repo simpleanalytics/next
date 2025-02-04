@@ -1,11 +1,12 @@
 import type { NextConfig } from "next";
+import { withRoutes } from "./routes";
 
 interface ClientHints {
   viewport?: boolean;
   language?: boolean;
 }
 
-function parseClientHints(clientHints?: ClientHints) {
+function buildClientHintHeaders(clientHints?: ClientHints) {
   const values: string[] = [];
 
   if (clientHints?.viewport !== false) {
@@ -38,7 +39,7 @@ export function withSimpleAnalytics(
 ): NextConfig {
   const hostname = options?.hostname ?? process.env.SIMPLE_ANALYTICS_HOSTNAME;
 
-  const clientHints = parseClientHints(options?.clientHints);
+  const clientHints = buildClientHintHeaders(options?.clientHints);
 
   const nextAnalyticsConfig: NextConfig = {
     async rewrites() {
@@ -117,5 +118,10 @@ export function withSimpleAnalytics(
       : {}),
   };
 
-  return { ...nextConfig, ...nextAnalyticsConfig };
+  return {
+    ...(process.env.EXPERIMENTAL_ANALYTICS_MIDDLEWARE === "1"
+      ? withRoutes(nextConfig)
+      : nextConfig),
+    ...nextAnalyticsConfig,
+  };
 }
