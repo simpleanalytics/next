@@ -27,7 +27,6 @@
   },
   "scripts": {
     "build": "tsup",
-    "dev": "tsup --watch",
     "format": "prettier --write ."
   },
   "dependencies": {
