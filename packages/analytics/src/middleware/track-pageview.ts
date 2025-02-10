@@ -6,9 +6,7 @@ import type {
 } from "../server/interfaces";
 import { isDoNotTrackEnabled, parseRequest } from "../server/utils";
 import { parseUtmParameters } from "../server/utm";
-import { isExistingRoute } from "./routes";
-
-const PROXY_PATHS = /^\/(proxy\.js|auto-events\.js|simple\/.*)$/;
+import { isIndexedRoute } from "./routes";
 
 type TrackPageviewOptions = TrackingOptions & ServerContext;
 
@@ -35,7 +33,7 @@ export async function trackPageview(options: TrackPageviewOptions) {
     return;
   }
 
-  if (PROXY_PATHS.test(path) || !(await isExistingRoute(path))) {
+  if (!(await isIndexedRoute(path))) {
     return;
   }
 
