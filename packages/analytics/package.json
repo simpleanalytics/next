@@ -37,7 +37,8 @@
     "@types/react": "^19.0.7",
     "esbuild-plugin-preserve-directives": "^0.0.11",
     "prettier": "3.4.2",
-    "tsup": "^8.3.5"
+    "tsup": "^8.3.5",
+    "webpack": "latest"
   },
   "peerDependencies": {
     "next": ">= 13",

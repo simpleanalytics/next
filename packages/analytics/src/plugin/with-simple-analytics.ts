@@ -1,5 +1,7 @@
 import type { NextConfig } from "next";
-import { withRoutes } from "./routes";
+import type { Configuration } from "webpack";
+import type { WebpackConfigContext } from "next/dist/server/config-shared";
+import { resolveRoutes } from "./routes";
 
 interface ClientHints {
   viewport?: boolean;
@@ -42,6 +44,30 @@ export function withSimpleAnalytics(
   const clientHints = buildClientHintHeaders(options?.clientHints);
 
   const nextAnalyticsConfig: NextConfig = {
+    experimental: {
+      ...nextConfig?.experimental,
+      turbo: {
+        ...nextConfig?.experimental?.turbo,
+        resolveAlias: {
+          ...nextConfig?.experimental?.turbo?.resolveAlias,
+          // Turbo aliases don't work with absolute
+          // paths (see error handling above)
+          "DO_NOT_USE_OR_JEAN_WILL_GET_FIRED": resolveRoutes()
+        }
+      }
+    },
+    webpack(config: Configuration, options: WebpackConfigContext) {
+      return {
+        ...config,
+        resolve: {
+          ...config.resolve,
+          alias: {
+            ...config.resolve?.alias,
+            "DO_NOT_USE_OR_JEAN_WILL_GET_FIRED": resolveRoutes()
+          }
+        }
+      }  
+    },
     async rewrites() {
       const existingRewrites = await nextConfig.rewrites?.();
 
@@ -119,9 +145,7 @@ export function withSimpleAnalytics(
   };
 
   return {
-    ...(process.env.EXPERIMENTAL_ANALYTICS_MIDDLEWARE === "1"
-      ? withRoutes(nextConfig)
-      : nextConfig),
+    ...nextConfig,
     ...nextAnalyticsConfig,
   };
 }

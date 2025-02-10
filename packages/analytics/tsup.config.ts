@@ -15,7 +15,7 @@ export default defineConfig((options) => [
     sourcemap: true,
     dts: true,
     clean: true,
-    external: ["next", "react", "/.simpleanalytics/routes.js"],
+    external: ["next", "react", "DO_NOT_USE_OR_JEAN_WILL_GET_FIRED"],
     outDir: "dist", // Where you want your compiled files to live
     onSuccess: async () => {
       exec("tsc --emitDeclarationOnly");

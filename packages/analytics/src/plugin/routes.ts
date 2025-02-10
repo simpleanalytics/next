@@ -6,7 +6,6 @@ import {
   mkdirSync,
 } from "node:fs";
 import { resolve, join, extname, relative } from "node:path";
-import type { NextConfig } from "next";
 
 interface RouteInfo {
   /** The relative path to the page file */
@@ -297,43 +296,25 @@ function getBaseDir(dir: string) {
   return usesSrc ? join(dir, "src") : dir;
 }
 
-/**
- * Next.js plugin that collects all routes at compile time and makes them available at runtime
- */
-export function withRoutes(nextConfig: NextConfig = {}): NextConfig {
-  return {
-    ...nextConfig,
-    webpack(config: any, options: any) {
-      const { isServer, dir } = options;
+export function resolveRoutes() {
+  const baseDir = getBaseDir(process.cwd());
+  const pagesDir = join(baseDir, "pages");
+  const appDir = join(baseDir, "app");
 
-      // Only run on server-side build
-      if (isServer) {
-        const baseDir = getBaseDir(dir);
-        const pagesDir = join(baseDir, "pages");
-        const appDir = join(baseDir, "app");
+  routes = [];
 
-        // Reset routes for new collection
-        routes = [];
+  // Collect Page routes
+  if (existsSync(pagesDir)) {
+    routes.push(...collectPageRoutesRecursively(pagesDir));
+  }
 
-        // Collect routes from pages and app directories if they exist
-        if (existsSync(pagesDir)) {
-          routes.push(...collectPageRoutesRecursively(pagesDir));
-        }
+  // Collect App routes
+  if (existsSync(appDir)) {
+    routes.push(...collectAppRoutesRecursively(appDir));
+  }
 
-        if (existsSync(appDir)) {
-          routes.push(...collectAppRoutesRecursively(appDir));
-        }
+  // Write collected routes to file
+  writeRoutesToFile(process.cwd(), routes);
 
-        // Write collected routes to file
-        writeRoutesToFile(dir, routes);
-      }
-
-      // Call the original webpack config if it exists
-      if (typeof nextConfig.webpack === "function") {
-        return nextConfig.webpack(config, options);
-      }
-
-      return config;
-    },
-  };
+  return "./.simpleanalytics/routes.js";
 }
