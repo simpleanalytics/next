@@ -63,7 +63,7 @@ export function withSimpleAnalytics(
           ...config.resolve,
           alias: {
             ...config.resolve?.alias,
-            "DO_NOT_USE_OR_JEAN_WILL_GET_FIRED": resolveRoutes()
+            "DO_NOT_USE_OR_JEAN_WILL_GET_FIRED": resolveRoutes({ useAbsolutePath: true })
           }
         }
       }  

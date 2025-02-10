@@ -296,7 +296,7 @@ function getBaseDir(dir: string) {
   return usesSrc ? join(dir, "src") : dir;
 }
 
-export function resolveRoutes() {
+export function resolveRoutes(options = { useAbsolutePath: false }): string {
   const baseDir = getBaseDir(process.cwd());
   const pagesDir = join(baseDir, "pages");
   const appDir = join(baseDir, "app");
@@ -316,5 +316,5 @@ export function resolveRoutes() {
   // Write collected routes to file
   writeRoutesToFile(process.cwd(), routes);
 
-  return "./.simpleanalytics/routes.js";
+  return options.useAbsolutePath ? resolve(resolve(process.cwd(), ".simpleanalytics"), "routes.js") : "./.simpleanalytics/routes.js";
 }
