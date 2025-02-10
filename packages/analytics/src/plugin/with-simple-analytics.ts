@@ -57,7 +57,7 @@ export function withSimpleAnalytics(
       }
     },
     webpack(config: Configuration, options: WebpackConfigContext) {
-      return {
+      config = {
         ...config,
         resolve: {
           ...config.resolve,
@@ -66,7 +66,9 @@ export function withSimpleAnalytics(
             "DO_NOT_USE_OR_JEAN_WILL_GET_FIRED": resolveRoutes({ useAbsolutePath: true })
           }
         }
-      }  
+      };
+
+      return nextConfig.webpack?.(config, options) ?? config;
     },
     async rewrites() {
       const existingRewrites = await nextConfig.rewrites?.();
