@@ -44,6 +44,7 @@ export async function trackEvent(
     method: "POST",
     headers: {
       "Content-Type": "application/json",
+      "X-Forwarded-For": headers.get("X-Forwarded-For") ?? "",
     },
     body: JSON.stringify(payload),
   });
@@ -82,6 +83,11 @@ export async function trackPageview(options: TrackPageviewOptions) {
   const headers =
     "headers" in options ? options.headers : options.request.headers;
 
+  // We don't record non-navigation requests
+  if (headers.get("Sec-Fetch-Mode") !== "navigate") {
+    return;
+  }
+
   if (isDoNotTrackEnabled(headers) && !options.collectDnt) {
     console.log("Do not track enabled, not tracking pageview");
     return;
@@ -108,6 +114,7 @@ export async function trackPageview(options: TrackPageviewOptions) {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
+      ...(headers.has("X-Forwarded-For") && { "X-Forwarded-For": headers.get("X-Forwarded-For")! }),
     },
     body: JSON.stringify(payload),
   });
