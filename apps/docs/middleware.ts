@@ -1,5 +1,5 @@
 import { NextRequest, NextFetchEvent, NextResponse } from "next/server";
-import { trackPageview } from "@simpleanalytics/next/middleware";
+import { trackPageview } from "@simpleanalytics/next/server";
 
 export async function middleware(request: NextRequest, event: NextFetchEvent) {
   event.waitUntil(trackPageview({ request }));
