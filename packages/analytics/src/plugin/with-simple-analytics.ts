@@ -44,32 +44,34 @@ export function withSimpleAnalytics(
   const clientHints = buildClientHintHeaders(options?.clientHints);
 
   const nextAnalyticsConfig: NextConfig = {
-    experimental: {
-      ...nextConfig?.experimental,
-      turbo: {
-        ...nextConfig?.experimental?.turbo,
-        resolveAlias: {
-          ...nextConfig?.experimental?.turbo?.resolveAlias,
-          // Turbo aliases don't work with absolute
-          // paths (see error handling above)
-          "DO_NOT_USE_OR_JEAN_WILL_GET_FIRED": resolveRoutes()
-        }
-      }
-    },
-    webpack(config: Configuration, options: WebpackConfigContext) {
-      config = {
-        ...config,
-        resolve: {
-          ...config.resolve,
-          alias: {
-            ...config.resolve?.alias,
-            "DO_NOT_USE_OR_JEAN_WILL_GET_FIRED": resolveRoutes({ useAbsolutePath: true })
+    ...(process.env.ENABLE_ANALYTICS_PATH_VALIDATION === "1" && {
+      experimental: {
+        ...nextConfig?.experimental,
+        turbo: {
+          ...nextConfig?.experimental?.turbo,
+          resolveAlias: {
+            ...nextConfig?.experimental?.turbo?.resolveAlias,
+            // Turbo aliases don't work with absolute
+            // paths (see error handling above)
+            "DO_NOT_USE_OR_JEAN_WILL_GET_FIRED": resolveRoutes()
           }
         }
-      };
-
-      return nextConfig.webpack?.(config, options) ?? config;
-    },
+      },
+      webpack(config: Configuration, options: WebpackConfigContext) {
+        config = {
+          ...config,
+          resolve: {
+            ...config.resolve,
+            alias: {
+              ...config.resolve?.alias,
+              "DO_NOT_USE_OR_JEAN_WILL_GET_FIRED": resolveRoutes({ useAbsolutePath: true })
+            }
+          }
+        };
+  
+        return nextConfig.webpack?.(config, options) ?? config;
+      },
+    }),
     async rewrites() {
       const existingRewrites = await nextConfig.rewrites?.();
 
