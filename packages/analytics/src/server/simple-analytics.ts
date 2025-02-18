@@ -7,7 +7,7 @@ import type {
   HeaderOnlyContext,
   ServerContext,
 } from "./interfaces";
-import { isBuildTime, isProduction, isDoNotTrackEnabled, parseRequest } from "./utils";
+import { isBuildTime, isProduction, isDoNotTrackEnabled, parseRequest, isEnhancedBotDetectionEnabled } from "./utils";
 import { parseHeaders } from "./headers";
 import { parseUtmParameters } from "./utm";
 
@@ -53,7 +53,7 @@ export async function trackEvent(
     method: "POST",
     headers: {
       "Content-Type": "application/json",
-      "X-Forwarded-For": headers.get("X-Forwarded-For") ?? "",
+      ...(headers.has("X-Forwarded-For") && isEnhancedBotDetectionEnabled(options) && { "X-Forwarded-For": headers.get("X-Forwarded-For")! }),
     },
     body: JSON.stringify(payload),
   });
@@ -132,7 +132,7 @@ export async function trackPageview(options: TrackPageviewOptions) {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
-      ...(headers.has("X-Forwarded-For") && { "X-Forwarded-For": headers.get("X-Forwarded-For")! }),
+      ...(headers.has("X-Forwarded-For") && isEnhancedBotDetectionEnabled(options) && { "X-Forwarded-For": headers.get("X-Forwarded-For")! }),
     },
     body: JSON.stringify(payload),
   });

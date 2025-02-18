@@ -1,4 +1,5 @@
 import { PHASE_PRODUCTION_BUILD } from "next/constants";
+import type { TrackingOptions } from "./interfaces";
 
 export function isDoNotTrackEnabled(headers: Headers) {
   return headers.has("DNT") && headers.get("DNT") === "1";
@@ -35,4 +36,8 @@ export function isRunningOnVercel() {
 
 export function isBuildTime() {
   return process.env.NEXT_PHASE === PHASE_PRODUCTION_BUILD;
+}
+
+export function isEnhancedBotDetectionEnabled(options: TrackingOptions) {
+  return options.enhancedBotDetection === true;
 }

@@ -54,6 +54,7 @@ export type ServerContextWithPath = {
 
 export interface TrackingOptions {
   hostname?: string | undefined;
+  enhancedBotDetection?: boolean | undefined;
   strictUtm?: boolean | undefined;
   ignoreMetrics?: IgnoredMetrics | undefined;
   collectDnt?: boolean | undefined;
