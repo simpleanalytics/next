@@ -7,7 +7,7 @@ import type {
   HeaderOnlyContext,
   ServerContext,
 } from "./interfaces";
-import { isDoNotTrackEnabled, parseRequest } from "./utils";
+import { isBuildTime, isProduction, isDoNotTrackEnabled, parseRequest } from "./utils";
 import { parseHeaders } from "./headers";
 import { parseUtmParameters } from "./utm";
 
@@ -39,6 +39,15 @@ export async function trackEvent(
     metadata: options.metadata,
     ...parseHeaders(headers, options.ignoreMetrics),
   };
+
+  if (isBuildTime()) {
+    return;
+  }
+
+  if (!isProduction()) {
+    console.log("Simple Analytics is disabled by default in development and preview environments, enable it by setting ENABLE_ANALYTICS_IN_DEV=1 in your environment");
+    return;
+  }
 
   const response = await fetch("https://queue.simpleanalyticscdn.com/events", {
     method: "POST",
@@ -109,6 +118,15 @@ export async function trackPageview(options: TrackPageviewOptions) {
         })
       : {}),
   };
+
+  if (isBuildTime()) {
+    return;
+  }
+
+  if (!isProduction()) {
+    console.log("Simple Analytics is disabled by default in development and preview environments, enable it by setting ENABLE_ANALYTICS_IN_DEV=1 in your environment");
+    return;
+  }
 
   const response = await fetch("https://queue.simpleanalyticscdn.com/events", {
     method: "POST",
