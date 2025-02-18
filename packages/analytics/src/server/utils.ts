@@ -1,5 +1,6 @@
-import { PHASE_PRODUCTION_BUILD } from "next/constants";
 import type { TrackingOptions } from "./interfaces";
+
+const PHASE_PRODUCTION_BUILD = "phase-production-build"; // Avoid requiring "next/constants" as dependency.
 
 export function isDoNotTrackEnabled(headers: Headers) {
   return headers.has("DNT") && headers.get("DNT") === "1";
