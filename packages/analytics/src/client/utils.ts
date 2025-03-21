@@ -32,7 +32,9 @@ export function parseDataProps(settings?: SimpleAnalyticsProps) {
   }
 
   if (!isProduction()) {
-    console.log("Simple Analytics is disabled by default in development and preview environments, enable it by setting NEXT_PUBLIC_ENABLE_ANALYTICS_IN_DEV=1 in your environment");
+    console.log(
+      "Simple Analytics is disabled by default in development and preview environments, enable it by setting NEXT_PUBLIC_ENABLE_ANALYTICS_IN_DEV=1 in your environment",
+    );
     return {};
   }
 

@@ -4,9 +4,15 @@ import type {
   ServerContext,
   TrackingOptions,
 } from "../server/interfaces";
-import { isBuildTime, isDoNotTrackEnabled, isProduction, parseRequest, isEnhancedBotDetectionEnabled } from "../server/utils";
+import {
+  isBuildTime,
+  isDoNotTrackEnabled,
+  isProduction,
+  parseRequest,
+  isEnhancedBotDetectionEnabled,
+} from "../server/utils";
 import { parseUtmParameters } from "../server/utm";
-import { isIndexedRoute } from "./routes";
+import { isValidPageview } from "./routes";
 
 type TrackPageviewOptions = TrackingOptions & ServerContext;
 
@@ -43,11 +49,13 @@ export async function trackPageview(options: TrackPageviewOptions) {
   }
 
   if (!isProduction()) {
-    console.log("Simple Analytics is disabled by default in development and preview environments, enable it by setting ENABLE_ANALYTICS_IN_DEV=1 in your environment");
+    console.log(
+      "Simple Analytics is disabled by default in development and preview environments, enable it by setting ENABLE_ANALYTICS_IN_DEV=1 in your environment",
+    );
     return;
   }
 
-  if (!(await isIndexedRoute(path))) {
+  if (!(await isValidPageview(path))) {
     return;
   }
 
@@ -68,7 +76,10 @@ export async function trackPageview(options: TrackPageviewOptions) {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
-      ...(headers.has("X-Forwarded-For") && isEnhancedBotDetectionEnabled(options) && { "X-Forwarded-For": headers.get("X-Forwarded-For")! }),
+      ...(headers.has("X-Forwarded-For") &&
+        isEnhancedBotDetectionEnabled(options) && {
+          "X-Forwarded-For": headers.get("X-Forwarded-For")!,
+        }),
     },
     body: JSON.stringify(payload),
   });

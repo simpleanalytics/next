@@ -316,5 +316,7 @@ export function resolveRoutes(options = { useAbsolutePath: false }): string {
   // Write collected routes to file
   writeRoutesToFile(process.cwd(), routes);
 
-  return options.useAbsolutePath ? resolve(resolve(process.cwd(), ".simpleanalytics"), "routes.js") : "./.simpleanalytics/routes.js";
+  return options.useAbsolutePath
+    ? resolve(resolve(process.cwd(), ".simpleanalytics"), "routes.js")
+    : "./.simpleanalytics/routes.js";
 }
