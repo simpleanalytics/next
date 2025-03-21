@@ -7,7 +7,13 @@ import type {
   HeaderOnlyContext,
   ServerContext,
 } from "./interfaces";
-import { isBuildTime, isProduction, isDoNotTrackEnabled, parseRequest, isEnhancedBotDetectionEnabled } from "./utils";
+import {
+  isBuildTime,
+  isProduction,
+  isDoNotTrackEnabled,
+  parseRequest,
+  isEnhancedBotDetectionEnabled,
+} from "./utils";
 import { parseHeaders } from "./headers";
 import { parseUtmParameters } from "./utm";
 
@@ -45,7 +51,9 @@ export async function trackEvent(
   }
 
   if (!isProduction()) {
-    console.log("Simple Analytics is disabled by default in development and preview environments, enable it by setting ENABLE_ANALYTICS_IN_DEV=1 in your environment");
+    console.log(
+      "Simple Analytics is disabled by default in development and preview environments, enable it by setting ENABLE_ANALYTICS_IN_DEV=1 in your environment",
+    );
     return;
   }
 
@@ -53,7 +61,10 @@ export async function trackEvent(
     method: "POST",
     headers: {
       "Content-Type": "application/json",
-      ...(headers.has("X-Forwarded-For") && isEnhancedBotDetectionEnabled(options) && { "X-Forwarded-For": headers.get("X-Forwarded-For")! }),
+      ...(headers.has("X-Forwarded-For") &&
+        isEnhancedBotDetectionEnabled(options) && {
+          "X-Forwarded-For": headers.get("X-Forwarded-For")!,
+        }),
     },
     body: JSON.stringify(payload),
   });
@@ -124,7 +135,9 @@ export async function trackPageview(options: TrackPageviewOptions) {
   }
 
   if (!isProduction()) {
-    console.log("Simple Analytics is disabled by default in development and preview environments, enable it by setting ENABLE_ANALYTICS_IN_DEV=1 in your environment");
+    console.log(
+      "Simple Analytics is disabled by default in development and preview environments, enable it by setting ENABLE_ANALYTICS_IN_DEV=1 in your environment",
+    );
     return;
   }
 
@@ -132,7 +145,10 @@ export async function trackPageview(options: TrackPageviewOptions) {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
-      ...(headers.has("X-Forwarded-For") && isEnhancedBotDetectionEnabled(options) && { "X-Forwarded-For": headers.get("X-Forwarded-For")! }),
+      ...(headers.has("X-Forwarded-For") &&
+        isEnhancedBotDetectionEnabled(options) && {
+          "X-Forwarded-For": headers.get("X-Forwarded-For")!,
+        }),
     },
     body: JSON.stringify(payload),
   });
