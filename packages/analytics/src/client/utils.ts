@@ -14,7 +14,7 @@ export function isProduction() {
     return true;
   }
 
-  return process.env.NEXT_PUBLIC_VERCEL_ENV !== "production";
+  return process.env.NEXT_PUBLIC_VERCEL_ENV === "production";
 }
 
 function isBuildTime() {

@@ -28,7 +28,7 @@ export function isProduction() {
     return true;
   }
 
-  return process.env.VERCEL_ENV !== "production";
+  return process.env.VERCEL_ENV === "production";
 }
 
 export function isRunningOnVercel() {
