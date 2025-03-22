@@ -102,7 +102,7 @@ export function withSimpleAnalytics(
 
       return {
         beforeFiles: existingRewrites.beforeFiles,
-        afterFiles: existingRewrites.afterFiles.concat(rewrites),
+        afterFiles: existingRewrites.afterFiles?.concat(rewrites),
         fallback: existingRewrites.fallback,
       };
     },
