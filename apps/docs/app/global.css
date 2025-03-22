@@ -1,11 +1,18 @@
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
+@import 'tailwindcss';
+@import 'fumadocs-ui/css/neutral.css';
+@import 'fumadocs-ui/css/preset.css';
+ 
+/* path of `fumadocs-ui` relative to the CSS file */
+@source '../node_modules/fumadocs-ui/dist/**/*.js';
 
 :root {
   @media (min-width: 768px) {
     .md\:\[--fd-sidebar-width\:268px\] {
-      --fd-sidebar-width: 280px !important;
+      --fd-sidebar-width: 284px !important;
     }
   }
+}
+
+@theme inline{
+  --font-space-grotesk: var(--font-space-grotesk);
 }
