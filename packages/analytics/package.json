@@ -16,10 +16,6 @@
       "types": "./dist/server/index.d.ts",
       "import": "./dist/server/index.js"
     },
-    "./middleware": {
-      "types": "./dist/middleware/index.d.ts",
-      "import": "./dist/middleware/index.js"
-    },
     "./plugin": {
       "types": "./dist/plugin/index.d.ts",
       "default": "./dist/plugin/index.js"
@@ -37,8 +33,7 @@
     "@types/react": "^19.0.12",
     "esbuild-plugin-preserve-directives": "^0.0.11",
     "prettier": "3.5.3",
-    "tsup": "^8.4.0",
-    "webpack": "^5.98.0"
+    "tsup": "^8.4.0"
   },
   "peerDependencies": {
     "next": ">= 13",
