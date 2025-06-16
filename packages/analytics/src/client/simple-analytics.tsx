@@ -1,6 +1,6 @@
 "use client";
 
-import React, { Suspense } from "react";
+import * as React from "react";
 import Script from "next/script";
 import type { AnalyticsMetadata } from "../interfaces";
 import { parseDataProps } from "./utils";
@@ -32,9 +32,9 @@ export const SimpleAnalytics = (props: SimpleAnalyticsProps) => {
   const dataProps = parseDataProps(props);
 
   return (
-    <Suspense fallback={null}>
+    <React.Suspense fallback={null}>
       <Script {...dataProps} src="/proxy.js" />
-    </Suspense>
+    </React.Suspense>
   );
 };
 
