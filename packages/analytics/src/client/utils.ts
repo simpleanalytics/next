@@ -17,19 +17,10 @@ export function isProduction() {
   return process.env.NEXT_PUBLIC_VERCEL_ENV === "production";
 }
 
-function isBuildTime() {
-  return process.env.NEXT_PHASE === PHASE_PRODUCTION_BUILD;
-}
-
 export function parseDataProps(settings?: SimpleAnalyticsProps) {
   if (!isProduction()) {
     return {};
   }
-
-  // if (!process.env.NEXT_PUBLIC_SIMPLE_ANALYTICS_HOSTNAME) {
-  //   console.log("No hostname provided for Simple Analytics");
-  //   return {};
-  // }
 
   const metrics = settings?.ignoreMetrics
     ? Object.entries(settings.ignoreMetrics)
