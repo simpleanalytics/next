@@ -23,10 +23,9 @@ export async function trackEvent(
   eventName: string,
   options: TrackEventOptions,
 ) {
-  const hostname = options.hostname ?? process.env.SIMPLE_ANALYTICS_HOSTNAME;
+  const hostname = options?.hostname ?? process.env.SIMPLE_ANALYTICS_HOSTNAME;
 
   if (!hostname) {
-    console.error("No hostname provided for Simple Analytics");
     return;
   }
 
@@ -34,7 +33,6 @@ export async function trackEvent(
     "request" in options ? options.request.headers : options.headers;
 
   if (isDoNotTrackEnabled(headers) && !options.collectDnt) {
-    console.log("Do not track enabled, not tracking event");
     return;
   }
 
@@ -46,14 +44,13 @@ export async function trackEvent(
     ...parseHeaders(headers, options.ignoreMetrics),
   };
 
-  if (isBuildTime()) {
+  if (isBuildTime() || !isProduction()) {
     return;
   }
 
-  if (!isProduction()) {
-    console.log(
-      "Simple Analytics is disabled by default in development and preview environments, enable it by setting ENABLE_ANALYTICS_IN_DEV=1 in your environment",
-    );
+  // Only show a warning in production.
+  if (!hostname) {
+    console.log("No hostname provided for Simple Analytics, event not tracked");
     return;
   }
 
@@ -86,10 +83,9 @@ const PROXY_PATHS = /^\/(proxy\.js|auto-events\.js|simple\/.*)$/;
 type TrackPageviewOptions = TrackingOptions & ServerContext;
 
 export async function trackPageview(options: TrackPageviewOptions) {
-  const hostname = options.hostname ?? process.env.SIMPLE_ANALYTICS_HOSTNAME;
+  const hostname = options?.hostname ?? process.env.SIMPLE_ANALYTICS_HOSTNAME;
 
   if (!hostname) {
-    console.error("No hostname provided for Simple Analytics");
     return;
   }
 
@@ -109,7 +105,6 @@ export async function trackPageview(options: TrackPageviewOptions) {
   }
 
   if (isDoNotTrackEnabled(headers) && !options.collectDnt) {
-    console.log("Do not track enabled, not tracking pageview");
     return;
   }
 
@@ -130,13 +125,14 @@ export async function trackPageview(options: TrackPageviewOptions) {
       : {}),
   };
 
-  if (isBuildTime()) {
+  if (isBuildTime() || !isProduction()) {
     return;
   }
 
-  if (!isProduction()) {
+  // Only show a warning in production.
+  if (!hostname) {
     console.log(
-      "Simple Analytics is disabled by default in development and preview environments, enable it by setting ENABLE_ANALYTICS_IN_DEV=1 in your environment",
+      "No hostname provided for Simple Analytics, pageview not tracked",
     );
     return;
   }

@@ -38,6 +38,11 @@ export function withSimpleAnalytics(
 ): NextConfig {
   const hostname = options?.hostname ?? process.env.SIMPLE_ANALYTICS_HOSTNAME;
 
+  if (!hostname) {
+    console.warn("No hostname provided for Simple Analytics, plugin disabled.");
+    return nextConfig;
+  }
+
   const clientHints = buildClientHintHeaders(options?.clientHints);
 
   const nextAnalyticsConfig: NextConfig = {
