@@ -1,8 +1,9 @@
-name: Publish Preview Package
+name: Publish Preview Package (React.js)
 on: [push, pull_request]
 
 jobs:
   build:
+    name: Publish Preview Package (React.js)
     runs-on: ubuntu-latest
     env:
       TURBO_TOKEN: ${{ secrets.TURBO_TOKEN }}
@@ -33,7 +34,7 @@ jobs:
         run: pnpm install
 
       - name: Build package
-        run: pnpm build --filter=@simpleanalytics/next
+        run: pnpm build --filter=@simpleanalytics/react
 
-      - name: Publish package
-        run: pnpx pkg-pr-new publish './packages/analytics'
+      - name: Publish React preview package
+        run: pnpx pkg-pr-new publish './packages/react'
