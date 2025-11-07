@@ -1,0 +1,40 @@
+name: Publish Preview Package (Next.js)
+on: [push, pull_request]
+
+jobs:
+  build:
+    name: Publish Preview Package (Next.js)
+    runs-on: ubuntu-latest
+    env:
+      TURBO_TOKEN: ${{ secrets.TURBO_TOKEN }}
+      TURBO_TEAM: ${{ vars.TURBO_TEAM }}
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Enable Corepack
+        run: npm i -g corepack@latest && corepack enable
+
+      - name: Setup Node.js v22 LTS
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: "pnpm"
+
+      - name: Cache Turborepo build setup
+        uses: actions/cache@v4
+        with:
+          path: .turbo
+          key: ${{ runner.os }}-turbo-${{ github.sha }}
+          restore-keys: |
+            ${{ runner.os }}-turbo-
+
+      - name: Install dependencies
+        run: pnpm install
+
+      - name: Build package
+        run: pnpm build --filter=@simpleanalytics/next
+
+      - name: Publish Next preview package
+        run: pnpx pkg-pr-new publish './packages/analytics'

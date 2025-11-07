@@ -1,4 +1,4 @@
-name: Release Package
+name: Release Package (React.js)
 
 on:
   push:
@@ -9,7 +9,7 @@ concurrency: ${{ github.workflow }}-${{ github.ref }}
 
 jobs:
   release:
-    name: Release
+    name: Release Package (React.js)
     runs-on: ubuntu-latest
     env:
       TURBO_TOKEN: ${{ secrets.TURBO_TOKEN }}
@@ -41,10 +41,10 @@ jobs:
         run: pnpm install
 
       - name: Build package
-        run: pnpm build --filter=@simpleanalytics/next
+        run: pnpm build --filter=@simpleanalytics/react
 
       - name: Publish package
         shell: bash
-        run: pnpm publish --filter=@simpleanalytics/next --access public --no-git-checks
+        run: pnpm publish --filter=@simpleanalytics/react --access public --no-git-checks
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
