@@ -45,6 +45,8 @@ export function withSimpleAnalytics(
 
   const clientHints = buildClientHintHeaders(options?.clientHints);
 
+  const basePathOption = nextConfig.basePath ? { basePath: false as const } : {};
+
   const nextAnalyticsConfig: NextConfig = {
     async rewrites() {
       const existingRewrites = await nextConfig.rewrites?.();
@@ -53,14 +55,17 @@ export function withSimpleAnalytics(
         {
           source: "/proxy.js",
           destination: `https://simpleanalyticsexternal.com/proxy.js?hostname=${hostname}&path=/simple`,
+          ...basePathOption,
         },
         {
           source: "/auto-events.js",
           destination: "https://scripts.simpleanalyticscdn.com/auto-events.js",
+          ...basePathOption,
         },
         {
           source: "/simple/:match*",
           destination: "https://queue.simpleanalyticscdn.com/:match*",
+          ...basePathOption,
         },
       ];
 
