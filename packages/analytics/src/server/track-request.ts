@@ -6,7 +6,21 @@ import { isBuildTime, isProduction } from "./utils";
 const QUEUE_URL = "https://queue.simpleanalyticscdn.com/requests";
 const TIMEOUT_MS = 2000;
 
-export interface TrackRequestOptions {
+function isOn(value: string | undefined) {
+  return value === "1" || value === "true";
+}
+
+function logTestMode(message: string) {
+  console.log(`Simple Analytics test mode: ${message}`);
+}
+
+/**
+ * Reports a page request for server-side collection, so AI agents and robots
+ * that do not run the script are counted. Call it from `proxy.ts` (or
+ * `middleware.ts` before Next.js 16) with `event.waitUntil` so the page does
+ * not wait for it. It never throws.
+ */
+export async function trackRequest(options: {
   /** The incoming request in `proxy.ts` or `middleware.ts`. */
   request: Request;
   /** Defaults to the `SIMPLE_ANALYTICS_HOSTNAME` environment variable. */
@@ -25,23 +39,7 @@ export interface TrackRequestOptions {
    * variable, which is on when set to `1` or `true`.
    */
   testMode?: boolean | undefined;
-}
-
-function isOn(value: string | undefined) {
-  return value === "1" || value === "true";
-}
-
-function logTestMode(message: string) {
-  console.log(`Simple Analytics test mode: ${message}`);
-}
-
-/**
- * Reports a page request for server-side collection, so AI agents and robots
- * that do not run the script are counted. Call it from `proxy.ts` (or
- * `middleware.ts` before Next.js 16) with `event.waitUntil` so the page does
- * not wait for it. It never throws.
- */
-export async function trackRequest(options: TrackRequestOptions) {
+}) {
   const testMode =
     options.testMode ?? isOn(process.env.SIMPLE_ANALYTICS_TEST_MODE);
 
