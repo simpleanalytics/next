@@ -122,7 +122,17 @@ AI agents and robots request your pages without running the script, so the scrip
 
 AI agents appear in your reports and count toward your usage. Robots stay hidden by default and do not count toward your usage. The beta covers how we classify and show this data.
 
-#### Turn it on
+#### Set it up with an AI agent
+
+Using Claude Code, Codex, Cursor or another AI agent? Ask it, with your website's hostname in Simple Analytics instead of `example.com`:
+
+```txt
+Set up Simple Analytics server-side collection for example.com, follow https://docs.simpleanalytics.com/server-side-collection.md
+```
+
+The guide has the agent use `trackRequest` from this package and test the setup without storing anything.
+
+#### Set it up yourself
 
 Server-side collection is off until you turn it on. Set these environment variables for your production deployment, and remove the second one to turn it off again:
 
@@ -151,37 +161,4 @@ export function proxy(request: NextRequest, event: NextFetchEvent) {
 
 `event.waitUntil` lets the page respond without waiting for the report. If your file has a `matcher`, make sure it matches every page you want counted.
 
-#### What it reports
-
-- Only `GET` requests. It skips stylesheets, JavaScript, images, fonts, audio, video and JSON by their path, and the paths the plugin uses for the script.
-- The hostname you set, the path, and only these query parameters: `utm_source`, `utm_medium`, `utm_campaign`, `utm_content`, `utm_term`, `source`, `medium`, `campaign`, `content`, `term` and `ref`.
-- The request headers `User-Agent`, `Referer`, `Accept`, `Accept-Language`, `Sec-Fetch-Mode`, `Sec-Fetch-Dest`, `Sec-Fetch-Site`, `Sec-Fetch-User`, `Sec-CH-UA`, `Signature-Agent` and `From`, and the address headers `X-Forwarded-For`, `CF-Connecting-IP` and `True-Client-IP`. Simple Analytics uses addresses in memory only and never stores them.
-- Never cookies or authorization headers.
-
-It runs before Next.js answers, so it does not know the response: pages that do not exist are reported too. It sends from production deployments only, gives up after 2 seconds, never retries, and never throws. Pages that a CDN or cache in front of your Next.js server answers, and static exports, are not reported.
-
-#### Options
-
-| Option                 | Default                                                    | Description                                                                   |
-| ---------------------- | ---------------------------------------------------------- | ----------------------------------------------------------------------------- |
-| `request`              | Required                                                   | The request your `proxy` or `middleware` function receives                    |
-| `hostname`             | `SIMPLE_ANALYTICS_HOSTNAME`                                | The hostname of your website in Simple Analytics                              |
-| `serverSideCollection` | `SIMPLE_ANALYTICS_SERVER_SIDE_COLLECTION` is `1` or `true` | Turns server-side collection on or off                                        |
-| `allowParams`          | `[]`                                                       | Query parameters to report besides the ones listed above, such as `["gclid"]` |
-| `testMode`             | `SIMPLE_ANALYTICS_TEST_MODE` is `1` or `true`              | Asks Simple Analytics to store nothing and prints its reply                   |
-
-#### Test mode
-
-Test mode checks your setup without storing anything, also on your own computer. Start your app with test mode on:
-
-```bash
-SIMPLE_ANALYTICS_SERVER_SIDE_COLLECTION=1 SIMPLE_ANALYTICS_TEST_MODE=1 npm run dev
-```
-
-Request a page the way an AI agent does:
-
-```bash
-curl -A "Mozilla/5.0 AppleWebKit/537.36 (KHTML, like Gecko); compatible; ChatGPT-User/1.0; +https://openai.com/bot" http://localhost:3000/
-```
-
-Your server console then shows what was sent, including the addresses, and the reply from Simple Analytics, which explains what it would store. Turn test mode off when you are done: while it is on, nothing is stored and visitors' addresses appear in your server console.
+See [server-side collection](https://simpleanalytics-next-docs.vercel.app/docs/server-side-collection) in the documentation for what it reports, all options and how to check your setup with test mode.
