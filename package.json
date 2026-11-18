@@ -5,6 +5,7 @@
     "dev": "turbo run dev",
     "build:package": "turbo run build --filter=@simpleanalytics/next",
     "lint": "turbo run lint",
+    "test": "pnpm --filter @simpleanalytics/next test",
     "format": "prettier --write \"**/*.{ts,tsx,md}\""
   },
   "devDependencies": {

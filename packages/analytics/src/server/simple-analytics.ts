@@ -16,6 +16,7 @@ import {
 } from "./utils";
 import { parseHeaders } from "./headers";
 import { parseUtmParameters } from "./utm";
+import { PROXY_PATHS } from "./request-payload";
 
 type TrackEventOptions = TrackingOptions & (ServerContext | HeaderOnlyContext);
 
@@ -77,8 +78,6 @@ export async function trackEvent(
     }
   }
 }
-
-const PROXY_PATHS = /^\/(proxy\.js|auto-events\.js|simple\/.*)$/;
 
 type TrackPageviewOptions = TrackingOptions & ServerContext;
 
