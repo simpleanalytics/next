@@ -23,7 +23,7 @@
   },
   "scripts": {
     "build": "tsup",
-    "test": "node --test --disable-warning=MODULE_TYPELESS_PACKAGE_JSON test/*.test.mjs",
+    "test": "node --experimental-strip-types --disable-warning=ExperimentalWarning --disable-warning=MODULE_TYPELESS_PACKAGE_JSON --test test/*.test.mjs",
     "format": "prettier --write ."
   },
   "dependencies": {
