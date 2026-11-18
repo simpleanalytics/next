@@ -6,6 +6,7 @@
     "index",
     "---Usage---",
     "pageviews",
-    "events"
+    "events",
+    "server-side-collection"
   ]
 }
