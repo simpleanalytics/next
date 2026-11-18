@@ -72,12 +72,6 @@ export type RequestPayload = {
   test?: true;
 } & { [Field in CopiedHeaderField]?: string };
 
-interface RequestReportOptions {
-  hostname: string;
-  allowParams?: string[] | undefined;
-  test?: boolean | undefined;
-}
-
 function filterQuery(searchParams: URLSearchParams, allowParams: string[]) {
   const allowed = new Set([...DEFAULT_ALLOWED_PARAMS, ...allowParams]);
   const query = new URLSearchParams();
@@ -93,7 +87,11 @@ function filterQuery(searchParams: URLSearchParams, allowParams: string[]) {
 
 export function buildRequestReport(
   request: Request,
-  options: RequestReportOptions,
+  options: {
+    hostname: string;
+    allowParams?: string[] | undefined;
+    test?: boolean | undefined;
+  },
 ) {
   const url = new URL(request.url);
 
